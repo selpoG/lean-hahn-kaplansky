@@ -40,4 +40,20 @@ jobs:
           cat axiom-report.txt
 
       - name: Run the mathlib style linter
-        run: lake exe lint-style HahnKaplanskyRealClosedness.Examples
+        run: lake exe lint-style HahnKaplanskyRealClosedness HahnKaplanskyRealClosedness.Examples HahnKaplanskyRealClosedness.AxiomAudit HahnKaplanskyRealClosedness.Smoke HahnKaplanskyRealClosedness.PuiseuxSmoke
+
+  pdf:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Task
+        uses: go-task/setup-task@v2
+        with:
+          version: '3.53.1'
+      - name: Install TeX dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            texlive-lang-japanese texlive-latex-extra texlive-fonts-recommended ripgrep
+      - name: Build English and Japanese proof PDFs
+        run: task proof-pdf

@@ -4,7 +4,7 @@ title: "lean-hahn-kaplansky: Hahn and Puiseux real closedness in Lean"
 authors:
   - name: "selpo"
 version: 0.1.0
-date-released: 2026-08-10
+date-released: 2026-09-06
 repository-code: "https://github.com/selpoG/lean-hahn-kaplansky"
 license: "Apache-2.0"
 keywords:

@@ -31,7 +31,7 @@ tasks:
   lint:
     desc: Run mathlib's text-based style linter
     cmds:
-      - lake exe lint-style HahnKaplanskyRealClosedness.Examples
+      - lake exe lint-style HahnKaplanskyRealClosedness HahnKaplanskyRealClosedness.Examples HahnKaplanskyRealClosedness.AxiomAudit HahnKaplanskyRealClosedness.Smoke HahnKaplanskyRealClosedness.PuiseuxSmoke
 
   proof-pdf:
     desc: Build the complete Lean-aligned English and Japanese mathematical proofs
@@ -46,5 +46,5 @@ tasks:
       - lake build HahnKaplanskyRealClosedness.Examples HahnKaplanskyRealClosedness.AxiomAudit
       - lake env lean HahnKaplanskyRealClosedness/Smoke.lean
       - lake env lean HahnKaplanskyRealClosedness/PuiseuxSmoke.lean
-      - lake exe lint-style HahnKaplanskyRealClosedness.Examples
+      - lake exe lint-style HahnKaplanskyRealClosedness HahnKaplanskyRealClosedness.Examples HahnKaplanskyRealClosedness.AxiomAudit HahnKaplanskyRealClosedness.Smoke HahnKaplanskyRealClosedness.PuiseuxSmoke
       - git diff --check
