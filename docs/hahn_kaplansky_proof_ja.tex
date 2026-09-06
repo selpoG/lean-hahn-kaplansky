@@ -1,0 +1,1305 @@
+\documentclass[11pt,uplatex,dvipdfmx]{jsarticle}
+
+% Keep dvipdfmx's document ID stable across rebuild directories.
+\AtBeginDvi{\special{pdf:trailerid [
+  <3bfb627811437dd6bfefa81e5bc42f1c>
+  <3bfb627811437dd6bfefa81e5bc42f1c>
+]}}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array,tabularx,longtable}
+\usepackage{seqsplit}
+\usepackage[dvipdfmx,unicode=false]{hyperref}
+% pxjahyper は旧形式の package/after/<name> hook を使うため、
+% 日本語 bookmark の Unicode 処理を保ったまま警告を避ける。
+\ExplSyntaxOn
+\ActivateGenericHook{package/after/otf}
+\ActivateGenericHook{package/after/ajmacros}
+\ExplSyntaxOff
+\usepackage{pxjahyper}
+\hypersetup{
+  pdftitle={Hahn 級数体と Puiseux 級数体の実閉性},
+  pdfauthor={selpo}
+}
+
+\newcommand{\Hahn}{k((\Gamma))}
+\newcommand{\Puiseux}{\mathcal P(k)}
+\newcommand{\Val}{v}
+\newcommand{\Supp}{\operatorname{supp}}
+\newcommand{\lc}{\operatorname{lc}}
+\newcommand{\Init}{\operatorname{in}}
+\newcommand{\Res}{\operatorname{res}}
+\newcommand{\Ocal}{\mathcal O}
+\newcommand{\Odd}{\operatorname{Odd}}
+\newcommand{\lean}[1]{\texttt{\expandafter\seqsplit\expandafter{\detokenize{#1}}}}
+\newcommand{\namedref}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\newcommand{\claimref}[3]{%
+  \hyperref[#1]{\textbf{#2~\ref*{#1}:} #3}}
+
+\newtheoremstyle{proofnote}
+  {6pt}{6pt}{\normalfont}{}{\bfseries}{.}{.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\theoremstyle{proofnote}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命題}
+\newtheorem{lemma}[theorem]{補題}
+\newtheorem{corollary}[theorem]{系}
+\newtheorem{definition}[theorem]{定義}
+\renewcommand{\proofname}{証明}
+
+\title{Hahn 級数体と Puiseux 級数体の実閉性}
+\author{selpo}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \(k\) を実閉順序体、\(\Gamma\) を可除な順序可換群とする。本稿では Hahn 体
+  \(k((\Gamma))\) が実閉であること、さらに \(\Gamma=\mathbb Q\) の場合の分母有界
+  部分体である Puiseux 級数体も実閉であることを証明する。第一の証明では、付値に
+  よる正規化と超限的な Newton 補正を組み合わせる。極限段階では一つの自然数列だけでなく
+  順序数の初切片全体にわたる Hahn 和を取り、集合論的な大きさの議論によって、加える
+  単項式の指数が無限に増加し続けることを排除する。第二の証明では、Newton 補正を一つの共通分母
+  格子の中に保つ。選んだ根が現在の重複度を保つ場合でも、加える単項式の指数は格子から出ないため、無限に続く
+  場合にはそれらの指数が非有界となり、その Hahn 和が Puiseux 根を与える。
+\end{abstract}
+
+\tableofcontents
+
+\section*{証明の構成}
+\addcontentsline{toc}{section}{証明の構成}
+
+証明の構成は次の通りである。実閉性の順序体判定法により、非負元の平方根と奇数次数
+多項式の根に帰着する。Hahn 級数では、奇数次数問題を付値環上の係数条件へ変換する。
+重複度 1 の場合は順序数再帰で解く。それより大きい奇重複度では、Newton 補正で選ぶ根の
+重複度が下がるか保たれる。後者を十分長い順序数初切片まで継続すると、\(\Gamma\) への
+不可能な単射が得られる。Puiseux 級数では、一つの共通分母格子を保ちながら同じ根構成を行い、
+対応する冪級数環上の単純根持ち上げを用いる。
+
+\section{主張と順序体の判定法}
+\label{sec:main}
+
+順序体が\emph{実閉}であるとは、その順序を延長できる真の代数拡大を持たないことをいう。
+これは \(-1\) の平方根を添加した体が代数閉であることと同値である。
+\(k\) を実閉順序体、\(\Gamma\) を可除な線形順序加法群とする。ここで可除とは、任意の
+\(\gamma\in\Gamma\) と整数 \(n\ge1\) に対し、\(n\delta=\gamma\) を満たす
+\(\delta\in\Gamma\) が（必然的に一意に）存在することをいう。\(k\) を係数体、
+\(\Gamma\) を指数群とする Hahn 級数とは形式和
+\[
+  x=\sum_{\gamma\in\Gamma}a_\gamma t^\gamma
+\]
+であって、その台
+\[
+  \Supp(x)=\{\gamma\in\Gamma:a_\gamma\ne0\}
+\]
+が整列集合、すなわちその任意の非空部分集合が最小元を持つものをいう。和は係数ごとに定め、
+積は畳み込みで定める。台の整列性
+により積の各係数は有限和となり、積の台も整列する。この体を
+\[
+  \Hahn=k((\Gamma))
+\]
+と書く。順序は辞書式順序、すなわち非零級数の符号を台の最小指数における係数の
+符号で定める。
+
+\begin{theorem}[Hahn--Kaplansky]
+\label{thm:hahn-real-closed}
+  順序体 \(k((\Gamma))\) は実閉である。
+\end{theorem}
+
+\(\Gamma=\mathbb Q\) のとき、分母有界 Puiseux 級数体を
+\[
+  \Puiseux
+  =
+  \left\{
+    x\in k((\mathbb Q)):
+    \text{ある }N\ge1\text{ が存在して }
+    \Supp(x)\subseteq\frac1N\mathbb Z
+  \right\}
+\]
+と定める。共通の分母上界を持つ二つの級数の和、積、逆元も同じ性質を持つので、
+\(\Puiseux\) は \(k((\mathbb Q))\) の部分体である。
+
+\begin{theorem}[Puiseux 級数体の実閉性]
+\label{thm:puiseux-real-closed}
+  順序体 \(\Puiseux\) は実閉である。
+\end{theorem}
+
+実閉順序体について、次の標準的な判定法を用いる。
+\begin{proposition}[実閉性の判定法]
+\label{prop:real-closed-criterion}
+  順序体 \(K\) が次の二条件を満たせば、\(K\) は実閉である。
+  \begin{enumerate}[label=(\roman*)]
+    \item \(K\) の非負元はすべて平方である。
+    \item \(K[X]\) の奇数次数多項式はすべて \(K\) に根を持つ。
+  \end{enumerate}
+\end{proposition}
+
+従って二つの主定理は、同じ二つの課題に帰着する。付値論の標準的な背景については
+\cite{Kaplansky,EnglerPrestel} を参照されたい。平方根の構成は級数の最小指数の
+近くで行う局所的な議論である。一方、奇数次数多項式の根の構成は大域的な議論であり、
+Newton 補正を総和し、その指数が制御されることを示さなければならない。
+
+\section{付値の準備と平方根}
+\label{sec:square-roots}
+
+\(x\ne0\) なる Hahn 級数に対し
+\[
+  \Val(x)=\min\Supp(x),\qquad
+  \lc(x)=a_{\Val(x)}
+\]
+と置き、\(\Val(0)=+\infty\) とする。最小指数を比較すれば
+\[
+  \Val(xy)=\Val(x)+\Val(y),\qquad
+  \Val(x+y)\ge\min\{\Val(x),\Val(y)\}
+\]
+を得る。二つの付値が異なるとき、後者は等号である。付値環とその極大イデアルを
+\[
+  \Ocal=\{x:\Val(x)\ge0\},\qquad
+  \mathfrak m=\{x:\Val(x)>0\}
+\]
+と書く。付値環の元の剰余は、指数零の係数である。\(\Ocal\) の元で、その逆元も
+\(\Ocal\) に属するものを\emph{単元}という。これは付値が零であることと同値である。
+級数または多項式の係数が \(\Ocal\) に属するとき、それを\emph{整係数}という。
+
+Hahn 級数の族 \((A_i)_{i\in I}\) が\emph{Hahn 総和可能}であるとは、
+\(\bigcup_i\Supp(A_i)\) が整列し、各 \(\gamma\in\Gamma\) に対して
+\([t^\gamma]A_i\ne0\) となる \(i\) が有限個しかないことをいう。このとき Hahn 和を、
+各係数に寄与する有限和によって定める。
+
+\begin{lemma}[先頭項の正規化]
+\label{lem:leading-term}
+  \(x>0\) ならば
+  \[
+    x=c\,t^\gamma(1+w)
+  \]
+  と書ける。ただし \(\gamma\in\Gamma\)、\(c\in k\) は \(c>0\) を満たし、
+  \(w\in\mathfrak m\) である。
+\end{lemma}
+\begin{proof}
+  \(\gamma=\Val(x)\)、\(c=\lc(x)\) と取る。辞書式順序から \(c>0\) である。
+  \(w=c^{-1}t^{-\gamma}x-1\) と置く。級数 \(c^{-1}t^{-\gamma}x\) の
+  付値は零、先頭係数は \(1\) なので、これと \(1\) との差の付値は正である。
+  従って \(w\in\mathfrak m\) であり、\(w\) の定義から所望の等式を得る。
+\end{proof}
+
+\(u-1\in\mathfrak m\) を満たす元 \(u\)、同値に \(w\in\mathfrak m\) に対する
+\(1+w\) の形の元を\emph{\(1\)-unit}と呼ぶ。
+
+ここで Neumann の台補題を用いる。順序可換群の正錐に含まれる整列部分集合 \(S\) に対し、
+\(S\) が生成する加法モノイドは整列しており、一つの群元を \(S\) の有限列の和として表す方法は
+有限個しかない。従って \(\Supp(w)\subseteq\Gamma_{>0}\) なら、冪の族
+\((w^n)_{n\ge0}\) は Hahn 総和可能である。これは Hahn 体の構成で用いる標準的な台補題である。
+\cite{EnglerPrestel}も参照されたい。
+
+\begin{lemma}[\(1\)-unit の二項級数平方根]
+\label{lem:positive-unit-square}
+  \(u\in k((\Gamma))\) が \(\Val(u-1)>0\) を満たすなら、
+  \(u=s^2\) となる \(s\in k((\Gamma))\) が存在する。
+\end{lemma}
+\begin{proof}
+  \(w=u-1\) と置く。\(w=0\) なら \(s=1\) とすればよい。以下 \(w\ne0\) とし、
+  \(\epsilon=\min\Supp(w)>0\) とする。二項級数
+  \[
+    s=\sum_{n\ge0}\binom{1/2}{n}w^n
+  \]
+  を考える。Neumann の台補題を正の整列集合 \(\Supp(w)\) に適用すると、これらの冪の台の
+  合併は整列し、任意の指数に寄与する冪は有限個である。従ってこの和は Hahn 級数として
+  意味を持ち、二項恒等式を係数ごとに確認できる。
+  その結果 \(s^2=1+w=u\) となる。
+\end{proof}
+
+\begin{proposition}[非負 Hahn 元は平方]
+\label{prop:hahn-squares}
+  \(k((\Gamma))\) の非負元はすべて平方である。
+\end{proposition}
+\begin{proof}
+  \(x=0\) なら明らかである。\(x>0\) のとき、\namedref{補題}{lem:leading-term} により
+  \(x=c\,t^\gamma(1+w)\) と書く。可除性から
+  \(2\delta=\gamma\) となる \(\delta\in\Gamma\) を取り、\(k\) の実閉性から
+  \(d^2=c\) となる \(d\in k^\times\) を取る。
+  \namedref{補題}{lem:positive-unit-square} により \(s^2=1+w\) とすれば
+  \[
+    x=(d\,t^\delta s)^2
+  \]
+  である。
+\end{proof}
+
+\section{奇数次数多項式の Newton 還元}
+\label{sec:newton-reduction}
+
+\(F(X)=\sum_i a_iX^i\in k((\Gamma))[X]\) とし、\(\delta\in\Gamma\) とする。
+根の構成では \(\delta>0\) を単項式補正 \(ct^\delta\) の指数として用いる。
+\(i\) 次の項の Newton 重みを
+\[
+  W_\delta(i)=\Val(a_i)+i\delta
+\]
+と置く。Hahn 級数 \(a\) の指数 \(\eta\) における係数を \([t^\eta]a\) と書く。
+\(\mu\in\Gamma\) に対し、重み水準 \(\mu\) 上の Newton 多項式を
+\[
+  \Init_{\delta,\mu}(F)(T)
+  =
+  \sum_{\substack{i:\ a_i\ne0\\ W_\delta(i)=\mu}}
+    [t^{\mu-i\delta}]a_i\,T^i\in k[T]
+\]
+と定める。その非零項は、重みが \(\mu\) である係数点とちょうど対応する。
+\(F\ne0\) かつ \(\mu_\delta=\min_{a_i\ne0}W_\delta(i)\) なら、
+\(\Init_{\delta,\mu_\delta}(F)\) は Newton 図形の最も低い直線上の通常の初期多項式であり、
+\(W_\delta(i)=\mu_\delta\) のときその \(i\) 次係数は \(\lc(a_i)\) である。
+
+非零多項式 \(P\in k[T]\) の根 \(c\) の\emph{重複度}とは、
+\((T-c)^r\) が \(P\) を割り切る最大の \(r\in\mathbb N\) をいう。同値に、
+\(P(c)=P'(c)=\cdots=P^{(r-1)}(c)=0\) かつ \(P^{(r)}(c)\ne0\) である。
+
+\begin{lemma}[奇数重複度 Newton 根での正規化]
+\label{lem:newton-correction}
+  \(\mu\in\Gamma\) とし、すべての \(i\) について \(\mu\le W_\delta(i)\) と仮定する。
+  \(c\in k\) が \(\Init_{\delta,\mu}(F)\) の正の奇数重複度 \(r\) の根であるとする。
+  \[
+    G(Z)=t^{-\mu}F\bigl(t^\delta(Z+c)\bigr)=\sum_j g_jZ^j
+  \]
+  と置く。このとき
+  \[
+    \Val(g_j)\ge0,\qquad
+    \Val(g_j)>0\ (j<r),\qquad
+    \Val(g_r)=0
+  \]
+  が成り立つ。従って \(G\in\Ocal[Z]\) であり、\(r\) 次係数は単元、\(r\) 未満の
+  係数はすべて \(\mathfrak m\) に属する。
+\end{lemma}
+\begin{proof}
+  \(F(c\,t^\delta+Y)=\sum_j b_jY^j\) と書く。展開すると
+  \[
+    F(c\,t^\delta+Y)
+    =
+    \sum_i a_i\sum_{j=0}^i\binom ij
+       c^{\,i-j}t^{(i-j)\delta}Y^j
+  \]
+  となる。\(b_j\) のうち指数 \(\mu-j\delta\) の寄与は
+  \(t^{\mu-j\delta}\Init_{\delta,\mu}(F)^{(j)}(c)/j!\) であり、\(Y\) に
+  重み \(\delta\) を与えると対応する項の全重みは \(\mu\) になる。
+  重複度 \(r\) の仮定により、
+  \(j<r\) ではこれが零、\(j=r\) では非零となる。他の寄与の重みはすべて厳密に大きい。
+  従って
+  \[
+    \Val(b_j)+j\delta\ge\mu,\qquad
+    \Val(b_j)+j\delta>\mu\ (j<r),\qquad
+    \Val(b_r)+r\delta=\mu
+  \]
+  を得る。これは通常の Newton 多角形計算そのものである。
+
+  \(g_j=t^{j\delta-\mu}b_j\) だから、この三つの重み不等式は \(G\) について
+  表示した三つの付値条件とちょうど同値である。これらと \(r\) が正の奇数という仮定から、
+  主張した係数条件が従う。
+\end{proof}
+
+\begin{definition}[正規化された奇数 Newton 問題]
+\label{def:odd-newton-problem}
+  重複度 \(m\) の正規化された奇数 Newton 問題とは、\(m>0\) が奇数で、
+  \(F\in k((\Gamma))[X]\) の全係数が整係数であり、\(X^m\) の係数が単元、次数 \(m\) 未満の
+  係数が \(\mathfrak m\) に属するものをいう。同値に、\(F\) の係数を \(\Ocal\) に一意に
+  持ち上げた多項式が後二条件を満たす。付値環上の定式化を使うときは、この持ち上げも同じ
+  記号 \(F\) で表す。
+\end{definition}
+
+ここで\emph{平行移動}とは代入 \(X\mapsto X+a\) をいい、\emph{単項式拡大}とは代入
+\(X\mapsto t^\delta X\) と、必要なら多項式全体への非零単項式 \(t^\eta\) の乗法をいう。
+正規化問題の解とは \(F(y)=0\) を満たす \(y\in\mathfrak m\) である。問題が有限回の
+これらの変換から得られた場合は、逆変換により \(y\) を元の多項式の根へ戻せる。
+
+次の補題で、剰余体 \(k\) の実閉性が Newton 論証に入る。
+
+\begin{lemma}[奇数次数初期多項式の非零な奇数重複度根]
+\label{lem:proper-odd-root}
+  \(I\in k[T]\) が奇数次数 \(n\) で、定数項が非零なら、
+  \(I\) は \(1\le r\le n\) となる奇数重複度 \(r\) の非零根を持つ。
+\end{lemma}
+\begin{proof}
+  実閉体上の既約多項式は一次または二次である。次数が奇数なので、一次因子のうち
+  奇数重複度で現れるものが存在する。その根を \(a\)、重複度を \(r\) とする。
+  定数項が非零なので \(0\) は根ではなく、従って \(a\ne0\) である。
+  根の重複度の正値性と \(r\le\deg I=n\) から残りも従う。
+\end{proof}
+
+重複度 \(m\) の正規化問題が \(\Val(a_0)=m\delta\) を満たすとする。ある \(j<m\) が
+\(a_j\ne0\) かつ \(\Val(a_j)+j\delta<m\delta\) を満たすとき、これを
+\emph{\(\delta\) における下側辺の場合}という。すなわち、ある係数点が定数項と
+\(m\) 次項を結ぶ直線より下にある場合である。また、\emph{真に小さい重複度}とは
+\(m\) より真に小さい重複度をいう。
+
+\begin{proposition}[下側 Newton 辺の重複度降下による解消]
+\label{prop:lower-edge}
+  \(F(X)=\sum_i a_iX^i\in k((\Gamma))[X]\) と書く。\(m\) を奇数（従って正）とし、
+  \[
+    \Val(a_m)=0,\qquad
+    \Val(a_i)>0\quad(0\le i<m),\qquad
+    \Val(a_i)\ge0\quad(i>m)
+  \]
+  と仮定する。奇数重複度 \(r<m\) の正規化された奇数 Newton 問題はすべて解を持つとする。
+  ある \(\delta\in\Gamma\) に対して
+  \[
+    \Val(a_0)=m\delta
+  \]
+  であり、さらに \(a_j\ne0\) かつ
+  \[
+    \Val(a_j)+j\delta<m\delta
+    \tag{LE}\label{eq:lower-edge-below}
+  \]
+  を満たす \(j<m\) が存在するとする。このとき \(F\) は正の付値を持つ根を持つ。
+\end{proposition}
+\begin{proof}
+  slope \(s\) に対して \(w_s(i)=\Val(a_i)+is\) を第 \(i\) 係数の Newton 重みと呼ぶ。
+  従って \eqref{eq:lower-edge-below} は、\(a_jX^j\) に対応する点が、定数項と \(m\) 次項を
+  通る slope \(-\delta\) の直線より真に下にあることを意味する。実際、この二つの端点の
+  Newton 重みはいずれも \(m\delta\) である。
+
+  この下側の点から \(\delta>0\) も従う。実際、その狭義不等式を移項すると
+  \(0<\Val(a_j)<(m-j)\delta\) であり、\(m-j>0\) だからである。
+
+  最初の下側 slope を
+  \[
+    \theta=
+    \min_{\substack{0\le i<m\\a_i\ne0}}
+       \frac{\Val(a_i)}{m-i}
+  \]
+  と定める。\eqref{eq:lower-edge-below} により最小値を取る集合は空でない。\(m\) 未満の
+  係数は極大イデアルに属するので、この集合の各元は正である。また
+  \eqref{eq:lower-edge-below} の \(j\) から \(\theta<\delta\) を得る。従って
+  \[
+    0<\theta<\delta.
+    \tag{S}\label{eq:lower-edge-theta}
+  \]
+
+  次の多項式を考える。
+  \[
+    \widetilde F_\theta(T)=t^{-m\theta}F(t^\theta T)
+      =\sum_i t^{(i-m)\theta}a_iT^i.
+  \]
+  \(i<m\) なら \(\theta\) の定義から
+  \(\Val(a_i)+(i-m)\theta\ge0\) である。\(i=m\) では明らかであり、\(i>m\) では
+  \(a_i\in\Ocal\) と \(\theta>0\) から従う。従って
+  \(\widetilde F_\theta\in\Ocal[T]\) であり、極大イデアルで還元して
+  \[
+    Q(T)=\overline{\widetilde F_\theta(T)}\in k[T]
+  \]
+  を定められる。\(\Val(a_m)=0\) なので \(Q\) の \(T^m\) の係数は非零である。
+  \(m\) より高次の係数の付値は真に正なので還元後は零となり、従って \(\deg Q=m\) である。
+  \(\theta\) の最小値を達成する添字から、\(Q\) は \(m\) 未満の非零係数も持つ。さらに
+  \[
+    \Val(a_0)-m\theta=m(\delta-\theta)>0
+  \]
+  なので \(Q(0)=0\) である。
+
+  \namedref{補題}{lem:proper-odd-root} と同じ一次・二次因子分解の議論により、
+  奇数次数多項式 \(Q\) は正の奇数重複度 \(r\) の根 \(a\) を持つ。ここでは
+  根が非零である必要はない。実は \(r<m\) である。もし \(r=m\) なら、
+  次数比較からある \(u\ne0\) により
+  \(Q(T)=u(T-a)^m\) と書ける。\(Q(0)=0\) なので \(a=0\)、従って
+  \(Q=uT^m\) となるが、これは \(m\) 未満の非零係数の存在に反する。
+
+  根 \(a\) を零へ平行移動して
+  \[
+    H(Z)=t^{-m\theta}F\bigl(t^\theta(Z+a)\bigr)
+  \]
+  と置く。\namedref{補題}{lem:newton-correction} により、\(H\) は重複度 \(r<m\) の
+  正規化された奇数 Newton 問題である。帰納法の仮定から
+  \(z\in\mathfrak m\) で \(H(z)=0\) となるものが存在する。
+  \[
+    y=t^\theta(z+a)
+  \]
+  と置けば \(F(y)=t^{m\theta}H(z)=0\) である。また \(z\in\mathfrak m\), \(a\in k\) なので
+  \(\Val(z+a)\ge0\) であり、\(\theta>0\) と合わせて
+  \(\Val(y)=\theta+\Val(z+a)>0\) を得る。従って \(y\) が求める根である。
+\end{proof}
+
+\(m>1\) のとき、正規化問題を \(\mathfrak m\) で還元すると、零は重複度ちょうど
+\(m\) の根になる。実際、\(m\) 未満の係数はすべて還元後に零となり、\(m\) 次係数は
+非零である。これを\emph{同重複度零分岐}と呼ぶ。この名称は、特定の剰余根とその
+重複度を記録するものであり、元の多項式がすでに根を持つという意味ではない。
+
+\section{超限 Newton 継続}
+\label{sec:transfinite}
+
+残る同重複度零分岐を、超限的な Newton 補正列によって解く。
+
+\begin{definition}[順序数に関する用語]
+\label{def:ordinal-terminology}
+  整列順序とは、空でない任意の部分集合が最小元を持つ線形順序である。順序数とは、
+  整列集合の順序型を表すものをいう。\(\lambda\) が順序数で \(\alpha<\lambda\) なら、
+  \(\alpha\) より前の初切片は \(\beta<\alpha\) なるすべての \(\beta\) からなる。
+  \(\alpha+1\) の形の順序数を後続順序数といい、最大元を持たない非零順序数を
+  極限順序数という。超限再帰では、後続段階の対象を直前の対象から定め、極限段階の
+  対象をそれ以前の初切片全体から定める。すべての順序数からなる類を
+  \(\mathrm{Ord}\) と書く。
+\end{definition}
+
+Newton 段階 \(\alpha\) では近似 \(x_\alpha\in\mathfrak m\) を保持し、
+\[
+  F_\alpha(Z)=F(x_\alpha+Z)=\sum_i b_iZ^i
+\]
+と書く。\namedref{定義}{def:odd-newton-problem} の意味で \(F_\alpha\) が重複度
+\(m\) の正規化された奇数 Newton 問題であるとき、この段階はなお重複度 \(m\) を持つという。
+これは表示した平行移動多項式に対する用語であり、新たな種類の Newton 過程を定義している
+わけではない。
+
+\begin{lemma}[後続段階の Newton 補正]
+\label{lem:successor-correction}
+  \(F\in\Ocal[X]\), \(m\in\mathbb N\), \(x\in\mathfrak m\) とし、
+  \(F_x(Z)=F(x+Z)=\sum_i b_iZ^i\) と書く。
+  \(\Val(F(x))=\gamma>0\)、\(\rho>0\)、\(m\rho=\gamma\) と仮定する。
+  \(F_x\) の \(\rho\) における全 Newton 重みが \(\gamma\) 以上であり、
+  \(c\in k^\times\) が \(\Init_{\rho,\gamma}(F_x)\) の根であるとする。このとき
+  \[
+    x'=x+ct^\rho\in\mathfrak m,
+    \qquad \Val(x'-x)=\rho
+  \]
+  であり、\(\Val(F(x'))>\gamma=\Val(F(x))\) となる。
+\end{lemma}
+\begin{proof}
+  \(x\) と \(ct^\rho\) はともに付値が正なので \(x'\in\mathfrak m\) であり、
+  \(c\ne0\) から \(\Val(x'-x)=\rho\) である。
+  \(F_x(ct^\rho)\) の展開では全項の重みが \(\gamma\) 以上で、重み \(\gamma\) の
+  係数はちょうど \(\Init_{\rho,\gamma}(F_x)(c)=0\) である。従って重み
+  \(\gamma\) の部分全体が消え、\(\Val(F(x'))>\gamma\) を得る。
+\end{proof}
+
+重複度 \(m\) の正規化段階では、
+\[
+  \Val(b_i)+i\rho\ge\gamma\qquad(0<i<m)
+  \tag{NB}\label{eq:successor-nonbelow}
+\]
+と \(m\) 次より上の係数の整性から、全重みが \(\gamma\) 以上になる。重み水準多項式は
+奇数次数 \(m\) で定数項が非零なので、\namedref{補題}{lem:proper-odd-root} が
+\namedref{補題}{lem:successor-correction} に必要な非零根 \(c\) を与える。
+
+\(m>1\) に対する\emph{固定持ち上げ・重複度固定 Newton 鎖}とは、\(F\) の一つの
+整係数持ち上げを固定し、各後続段階が\namedref{補題}{lem:successor-correction}の補正で得られる
+\(\mathfrak m\) 内の自然数列 \((x_n)\) をいう。
+\(x_{n+1}-x_n=c_nt^{\rho_n}\) の \(\rho_n\) を\emph{補正値}（または補正指数）と呼ぶ。
+
+\begin{lemma}[連続する補正値の狭義増加]
+\label{lem:successor-values-strict}
+  \(m>1\) の固定持ち上げ・重複度固定 Newton 鎖では、写像
+  \(n\mapsto\rho_n\) は狭義単調増加である。
+\end{lemma}
+\begin{proof}
+  後続段階の補正から
+  \(\Val(F(x_{n+1}))>\Val(F(x_n))\) を得る。両辺をそれぞれ
+  \(m\rho_{n+1}\), \(m\rho_n\) と書き、正の整数 \(m\) による乗法が
+  順序を厳密に保つことを使えばよい。
+\end{proof}
+
+\begin{lemma}[分離された族の Hahn 和]
+\label{lem:ordinal-hahn-sum}
+  \(I\) を整列集合とする。各 \(i\in I\) に対して Hahn 級数 \(D_i\) と
+  \(\ell_i,u_i\in\Gamma\) があり、
+  \[
+    \Supp(D_i)\subseteq[\ell_i,u_i),
+    \qquad i<j\Longrightarrow u_i\le\ell_j
+    \tag{SS}\label{eq:separated-supports}
+  \]
+  を満たすとする。このとき族 \((D_i)_{i\in I}\) は Hahn 総和可能である。
+\end{lemma}
+\begin{proof}
+  \(U=\bigcup_i\Supp(D_i)\) の非空部分集合 \(A\) を取る。
+  \(A\cap\Supp(D_i)\ne\varnothing\) となる最小の添字を \(i_0\) とし、その共通部分の
+  最小元を \(a_0\) とする。より前の台は \(A\) と交わらず、
+  \eqref{eq:separated-supports} により後の台の元はすべて
+  \(u_{i_0}>a_0\) 以上なので、\(a_0\) は \(A\) の最小元である。
+  また一つの指数が異なる二つの台に入ることはない。実際 \(i<j\) なら、そのような指数
+  \(\gamma\) に対して \(\gamma<u_i\le\ell_j\le\gamma\) となり矛盾する。
+  従って台の合併は整列し、各係数には高々一項しか寄与しないので、族は Hahn 総和可能である。
+\end{proof}
+
+特に、\(\lambda\) が極限順序数で \((\rho_\alpha)_{\alpha<\lambda}\) が狭義単調増加なら、
+\(D_\alpha=c_\alpha t^{\rho_\alpha}\)、
+\(\ell_\alpha=\rho_\alpha\)、\(u_\alpha=\rho_{\alpha+1}\) と置いて補題を適用する。
+\(\alpha+1<\lambda\) なので、
+\(x_0+\sum_{\alpha<\lambda}c_\alpha t^{\rho_\alpha}\) は Hahn 級数である。
+
+Hahn 総和可能な族 \(A=(A_*)\cup(A_i)_{i\in I}\)、多項式
+\(G(T)=\sum_{j=0}^d b_jT^j\)、\(\gamma\in\Gamma\) に対して、有限集合
+\(E_{G,\gamma}(A)\) を次のように定める。各係数
+\([t^\gamma]b_j(\sum A)^j\) を展開し、非零の寄与を持つ組に現れる通常の添字
+\(i\in I\) をすべて集め、\(0\le j\le d\) について合併する。Hahn 総和可能性により、これは
+有限集合である。区別した添字 \(*\) は \(E_{G,\gamma}(A)\) に含めない。
+
+\begin{lemma}[多項式評価の係数の有限依存性]
+\label{lem:ordinal-eval-finite}
+  \(A=(A_*)\cup(A_i)_{i\in I}\) を Hahn 総和可能な族とし、区別した項 \(A_*\) は常に残す。
+  \(I\) 上の述語 \(p\) に対し、\(p(i)\) が偽のときだけ \(A_i\) を零に置き換えた族を
+  \(A|_p\) と書く。\(G\in k((\Gamma))[T]\)、\(\gamma\in\Gamma\) に対して、
+  \[
+    E_{G,\gamma}(A)\subseteq\{i:p(i)\}
+    \quad\Longrightarrow\quad
+    [t^\gamma]G\!\left(\sum A\right)
+      =[t^\gamma]G\!\left(\sum(A|_p)\right)
+    \tag{FD}\label{eq:finite-dependence}
+  \]
+  が成り立つ。
+\end{lemma}
+\begin{proof}
+  直前の定義により、\(p\) が \(E_{G,\gamma}(A)\) をすべて含むなら、切断で寄与する組は
+  一つも失われず、
+  係数展開の各項は変化しない。従って \eqref{eq:finite-dependence} を得る。
+  順序数で添字付けられた補正族では、この有限集合を含む初切片を取れば十分後の段階になる。
+\end{proof}
+
+重複度 \(1\) 側では、個々の単項式補正ではなく、自然数個の補正をまとめた
+\(\omega\)-ブロックを超限再帰の一段階として扱う。\(F\in\Ocal[X]\) を固定する。
+以下のブロックデータ自体は \(F\) の係数や重複度に条件を課さず、それらの条件は
+ブロックを構成するときにだけ用いる。非根、すなわち \(F(x)\ne0\) である
+\(x\in\mathfrak m\) に対し
+\(v(x)=\Val(F(x))\in\Gamma\) と書く。
+
+\emph{Newton ブロック後続}とは、非根 \(x\in\mathfrak m\) から非根
+\(x^+\in\mathfrak m\) への移動であって
+  \[
+    v(x)<v(x^+),\qquad
+    \Supp(x^+-x)\subseteq [v(x),v(x^+))
+  \]
+を満たすものをいう。これは、一つの有界な自然数補正鎖の極限を、始点・終点・台の範囲だけに
+圧縮したデータである。極限からのさらに 1 回の補正は、その極限が非根であり構成を継続できる
+ことの証拠としてだけ使い、その補正自体はブロック差に含めない。
+
+\begin{lemma}[根または重複度 \(1\) のブロック後続]
+\label{lem:one-block-successor}
+  \(F\in\Ocal[X]\) の定数係数が \(\mathfrak m\) に属し、一次係数が単元であるとする。
+  \(x\in\mathfrak m\) を非根とする。このとき、\(F\) が \(\mathfrak m\) 内に根を持つか、
+  \(x\) からの Newton ブロック後続が存在するかのいずれかである。
+\end{lemma}
+\begin{proof}
+  \(x\) で平行移動する。定数係数は \(F(x)\in\mathfrak m\) である。一次係数は元の単元係数と
+  \(\mathfrak m\) を法として合同である。実際、高次係数からの寄与はすべて正の付値を持つ
+  \(x\) の冪を含む。従って平行移動後も重複度 \(1\) の正規化問題である。根が現れない限り
+  \namedref{補題}{lem:successor-correction}を反復し、狭義増加する正の値 \(\rho_n\) を持つ補正
+  \(c_nt^{\rho_n}\) と有限近似
+  \(x_n=x+\sum_{j<n}c_jt^{\rho_j}\) を得る。ここで
+  \(\Val(F(x_n))=\rho_n\) である。
+
+  補正単項式は Hahn 総和可能なので
+  \(x_\omega=x+\sum_nc_nt^{\rho_n}\) と置く。尾部
+  \(x_\omega-x_{n+1}\) の付値は \(\rho_{n+1}\) である。整係数と整な引数に対する Taylor 展開から
+  \[
+    \Val\bigl(F(x_\omega)-F(x_{n+1})\bigr)\ge\rho_{n+1}
+  \]
+  であり、\(\Val(F(x_{n+1}))=\rho_{n+1}\) と合わせて
+  \(\Val(F(x_\omega))\ge\rho_{n+1}>\rho_n\) を得る。\(\rho_n\) が非有界なら
+  \(F(x_\omega)\) の全係数が零なので、最初の選択肢を得る。そうでなく、まだ根がなければ、
+  \(F(x_\omega)\) の有限な正の付値を \(\eta\) と書ける。すべての \(n\) で
+  \(\rho_n<\eta\) である。
+
+  重複度 \(1\) では下側でないための中間次数条件は空である。\(x_\omega\) で平行移動した
+  多項式に補正値 \(\delta=\eta\) を取ると、重み水準多項式は定数項と一次項がともに非零なので、
+  非零根を持つ。従ってもう一度
+  \namedref{補題}{lem:successor-correction}を適用できる。Lean の構成では、この追加の 1 ステップが
+  有界な \(\omega\)-ブロックを保証するが、その行先はブロックの終点には含めない。
+
+  \(x^+=x_\omega\) と置く。これは \(\mathfrak m\) 内の非根で、
+  \(v(x^+)=\eta>\rho_0=v(x)\) である。\(x^+-x\) の台は \(\rho_n\) からなり、
+  \(\rho_0\le\rho_n<\eta\) なので
+  \[
+    \Supp(x^+-x)\subseteq[\Val(F(x)),\Val(F(x^+)))
+  \]
+  である。従ってこれは所望の Newton ブロック後続である。
+\end{proof}
+
+\begin{definition}[重複度 \(1\) の整合的 Newton ブロック過程]
+\label{def:coherent-one-block}
+  最小元 \(0\) を持つ整列集合 \(I\) 上の\emph{整合的な重複度 \(1\) Newton ブロック過程}とは、
+  各 \(\alpha\in I\) に非根 \(x_\alpha\in\mathfrak m\) と、そこからの Newton ブロック後続
+  \(x_\alpha^+\) を持ち、\(\alpha<\beta\) なら
+  \[
+    v(x_\alpha^+)\le v(x_\beta),
+  \]
+  かつ各 \(\alpha\) で
+  \[
+    x_\alpha-x_0=\sum_{\xi<\alpha}(x_\xi^+-x_\xi)
+    \tag{BC}\label{eq:block-coherence}
+  \]
+  を満たすものをいう。最初の条件は異なるブロックの台を分離し、第 2 の条件は各状態が
+  それ以前の全ブロック補正の Hahn 和であることを述べる。
+\end{definition}
+
+非零極限順序数 \(\lambda\) では、次の互換条件を用いる。各 \(\tau<\lambda\) に対し、
+\(\tau\) より前の全段階上に整合的ブロック過程 \(C^{<\tau}\) が構成されているとする。
+\(C^{<\alpha+1}\) の最後の状態と最後のブロックをそれぞれ
+\(x_\alpha,B_\alpha\) とし、\(B_\alpha\) の終点を \(x_\alpha^+\) と書く。この族が
+\emph{自然な極限互換性}を持つとは、次を満たすことをいう。
+\begin{enumerate}[label=(\roman*)]
+  \item 一つの \(x_0\in\mathfrak m\) が存在し、すべての非空な \(C^{<\tau}\) の最下端の
+    始点であり、添字 \(0\) で選ばれた状態の始点も \(x_0\) である。
+  \item \(\alpha<\beta<\lambda\) なら、\(B_\alpha\) の終点値は、
+    \(C^{<\beta+1}\) を \(\alpha\) まで制限したときの対応するブロックの終点値に等しい。
+  \item \(\alpha<\beta<\lambda\) なら、\(\alpha\) より前の選択ブロックの Hahn 和は、
+    \(C^{<\beta+1}\) を \(\alpha\) より前へ制限した Hahn 和に等しい。
+  \item 直前の制限 Hahn 和は、\(C^{<\alpha+1}\) 自身の中で作った初切片和に等しい。
+\end{enumerate}
+(iii), (iv) は本質的な互換性の仮定である。台が分離されているだけでは、独立に構成した
+二つの初切片の係数が一致するとは限らない。
+
+高重複度側では、超限再帰の状態に有界な自然数補正鎖そのものを残す。重複度 \(m\) の
+正規化問題 \(F\) の\emph{整係数持ち上げ}とは、Hahn 体内では \(F\) に等しい
+\(D\in\Ocal[X]\) であり、\(m\) 未満の係数が \(\mathfrak m\) に属し、\(m\) 次係数が
+単元であるものをいう。一つの \(D\) を固定する。\(A\in\mathfrak m\) から
+\(A'\in\mathfrak m\) への\emph{Newton 補正ステップ}とは、
+\(\gamma,\delta\in\Gamma\), \(c\in k\) が存在して
+\[
+  \gamma>0,\quad\delta>0,\quad c\ne0,\quad m\delta=\gamma,
+  \quad A'=A+ct^\delta,
+\]
+\[
+  \Val(D(A))=\gamma,\qquad
+  \Val(A'-A)=\delta,\qquad
+  \Val(D(A'))>\gamma
+  \tag{NS}\label{eq:newton-step-data}
+\]
+を満たすものをいう。
+
+\emph{根またはステップ性}とは、\(m\) 未満の重複度の根がすべて与えられているとき、
+任意の正規化された同重複度零分岐 \((F,m)\) に対し整係数持ち上げ \(D\) を一つ選べて、
+任意の \(A\in\mathfrak m\) から、\(F\) がすでに \(\mathfrak m\) 内の根を持つか、同じ
+\(D\) による Newton 補正ステップが存在するかのいずれかになることをいう。
+\emph{持ち上げ固定形}では、この二分法を任意の整係数持ち上げ \(D\) に要求する。ここでは
+両者は同値である。二つの持ち上げは Hahn 体で同じ像を持ち、埋め込み
+\(\Ocal\hookrightarrow k((\Gamma))\) が単射なので、両者は等しいからである。
+
+列 \((x_n)_{n\in\mathbb N}\) が\emph{根を持たない自然数補正鎖}であるとは、
+\(x_0=0\)、すべての \(x_n\in\mathfrak m\) であり、一つの固定した整係数持ち上げ \(D\) が
+すべての移動 \(x_n\to x_{n+1}\) を Newton 補正ステップにすることをいう。その補正値が
+\(\Gamma\) で上に有界なら\emph{有界}という。同重複度零分岐と、その固定持ち上げ \(D\)、
+および有界な自然数補正鎖の組を\emph{終端障害}と呼ぶ。
+
+元の多項式 \(F\) 上の\emph{平行移動付き終端状態}とは、平行移動量
+\(s\in\mathfrak m\)、平行移動多項式 \(F_s(Z)=F(s+Z)\)、\(F_s\) に対する終端障害、
+および \(F_s\) の根 \(z\) を \(F\) の根 \(s+z\) へ戻す移送の組である。状態に含まれる自然数鎖の
+最初の補正値を、その状態の\emph{ランク}と呼ぶ。
+
+\begin{definition}[高重複度の整合的終端状態過程]
+\label{def:coherent-terminal-process}
+  \(I\) を線形順序集合、\(F\in k((\Gamma))[X]\), \(m\in\mathbb N\) とする。
+  \((F,m)\) に対する平行移動付き終端状態を \((S_\alpha)_{\alpha\in I}\)、その平行移動量を
+  \(s_\alpha\)、ランクを \(\rho_\alpha\) と書く（各状態の終端データから、すでに
+  \(m>1\) かつ \(m\) は奇数と従う）。この族が\emph{整合的}であるとは、\(\alpha<\beta\) なら
+  \(\rho_\alpha<\rho_\beta\) であり、\(\alpha\le\beta\) かつ
+  \(\gamma<\rho_\alpha\) なら
+  \[
+    [t^\gamma]s_\alpha=[t^\gamma]s_\beta
+    \tag{TC}\label{eq:terminal-coherence}
+  \]
+  となることをいう。多項式評価の係数安定性はここでは仮定せず、次の再帰不変量として導く。
+\end{definition}
+
+\begin{proposition}[重複度 \(1\) の極限初切片]
+\label{prop:one-block-limit-prefix}
+  \(\lambda\) を非零極限順序数とする。各 \(\alpha<\lambda\) に対し
+  \namedref{定義}{def:coherent-one-block}の過程が真の各初切片上で構成され、得られた族が
+  自然な極限互換性を持つとする。このとき、選択した状態 \(x_\alpha\) とブロック
+  \(B_\alpha\) は、\(\alpha<\lambda\) の全初切片上で整合的 Newton ブロック過程をなす。
+\end{proposition}
+\begin{proof}
+  (ii) により、先の選択ブロックの終点値は、任意の後の過程内にあるそのブロックの終点値と
+  一致する。後の過程の分離条件から、\(\alpha<\beta\) なら
+  \(v(x_\alpha^+)\le v(x_\beta)\) である。従って選択ブロックの台は分離され、
+  \namedref{補題}{lem:ordinal-hahn-sum}により Hahn 総和可能である。
+
+  始点の整合性を確認する。\(\alpha<\lambda\) を固定し、極限順序数の性質から
+  \(\alpha<\beta<\lambda\) を取る。\(C^{<\beta+1}\) 内の整合性は、\(\alpha\) の状態と
+  最下端の始点との差を、その制限初切片和に等しいとする。(i) により最下端の始点は
+  \(x_0\)、(iii) により制限和は \(\alpha\) より前の選択ブロック和、(iv) によりこれは
+  \(C^{<\alpha+1}\) 内ですでに計算した初切片和でもある。従って
+  \[
+    x_\alpha-x_0=\sum_{\xi<\alpha}(x_\xi^+-x_\xi),
+  \]
+  すなわち \eqref{eq:block-coherence} を得る。状態、ブロック後続、非根という各条件は
+  選択した最後のデータから引き継がれるので、求める整合的過程を得る。
+\end{proof}
+
+\begin{proposition}[高重複度終端過程の不変量]
+\label{prop:terminal-process-invariant}
+  \((F,m)\) の終端障害を一つ固定する。その分岐データから \(m>1\) は奇数と従う。
+  \(m\) 未満の正規化問題がすべて解決済みで、持ち上げ固定形の根またはステップ性が成り立ち、
+  \(F\) は \(\mathfrak m\) 内に根を持たないと仮定する。再帰で得られる族を
+  \((S_\beta)_{\beta\in\mathrm{Ord}}\)、その平行移動量とランクを
+  \(s_\beta,\rho_\beta\) とする。任意の順序数 \(o\) に対し、次が成り立つ。
+  \begin{enumerate}[label=(\roman*)]
+    \item \(\beta<o\) なら \(\rho_\beta<\rho_o\) である。
+    \item \(\beta\le o\), \(\gamma<\rho_\beta\) なら
+      \([t^\gamma]s_o=[t^\gamma]s_\beta\) である。
+    \item \(\beta\le o\), \(\gamma<m\rho_\beta\) なら
+      \[
+        [t^\gamma]F(s_o)=[t^\gamma]F(s_\beta)
+        \tag{EC}\label{eq:terminal-eval-coherence}
+      \]
+      である。
+    \item \(\beta<o\) 上の写像 \(\beta\mapsto\rho_\beta\) は狭義単調で、
+      \[
+        s_o=\sum_{\xi<o}(s_{\xi+1}-s_\xi)
+        \tag{HS}\label{eq:terminal-prefix-sum}
+      \]
+      が成り立つ。
+  \end{enumerate}
+  特に、任意の順序数初切片への制限は
+  \namedref{定義}{def:coherent-terminal-process}の意味で整合的である。
+\end{proposition}
+\begin{proof}
+  \(\beta\) に関する超限帰納法を行う。\(0\) では、平行移動 \(s_0=0\) を持つ元の終端障害を
+  取り、四つの主張はいずれも自明である。
+
+  \(S_\alpha\) が構成済みとする。その最初の補正値に下側辺があれば、
+  \namedref{命題}{prop:lower-edge}と解決済みの低重複度問題から根が得られる。
+  平行移動を戻すと \(F\) の根となり、根がないという仮定に反する。
+  従って下側辺はない。有界鎖の最初の補正だけ進み、鎖を新しい始点からの
+  尾部で置き換える。平行移動の増分は値 \(\rho_\alpha\) の非零単項式であり、新しい
+  鎖は有界で、その最初の補正値は \(\rho_\alpha\) より大きい。また
+  \eqref{eq:newton-step-data}の背後にある Newton 重み評価により、
+  \(m\rho_\alpha\) より低い \(F(s_\alpha)\) の係数は変わらない。従って後続段階で、ランク増加、
+  平行移動係数の安定性、評価係数の安定性、初切片和の等式がすべて保たれる。
+
+  \(\beta\) を非零極限順序数とする。帰納法により、増分
+  \(s_{\xi+1}-s_\xi\) は狭義増加する値 \(\rho_\xi\) を持つ非零単項式である。
+  \namedref{補題}{lem:ordinal-hahn-sum}により総和可能なので、その和を \(s_\beta\) と定める。
+  これで \eqref{eq:terminal-prefix-sum}、\(s_\beta\in\mathfrak m\)、
+  \eqref{eq:terminal-coherence}を得る。実際、段階 \(\alpha\) 以降の増分はすべて
+  \(\rho_\alpha\) 未満の係数を持たない。\(\alpha<\beta\), \(\gamma<m\rho_\alpha\) とする。
+  \namedref{補題}{lem:ordinal-eval-finite}の有限集合を含む \(\eta<\beta\) を
+  \(\eta\ge\alpha\) となるよう取れば、\(\eta\) までの帰納法の仮定から
+  \eqref{eq:terminal-eval-coherence}を極限でも得る。
+
+  平行移動後の多項式は、同じ重複度の零枝条件を保つ。実際、
+  \(s_\beta\in\mathfrak m\) による平行移動の Taylor 展開を見ると、次数 \(m\) 未満の
+  係数から来る項はもともと \(\mathfrak m\) に属し、次数 \(m\) 以上から来る項は
+  \(s_\beta\) の正の冪を含むので、次数 \(m\) 未満の新しい係数も
+  \(\mathfrak m\) に属する。次数 \(m\) の係数は元の単元に
+  \(\mathfrak m\) の元を加えたものなので、依然として単元である。奇数性と
+  \(m>1\) も変わらない。従って極限状態で必要な仮定はすべて保たれている。
+
+  平行移動多項式 \(F(X+s_\beta)\) に持ち上げ固定形の根またはステップ性を適用する。根がない
+  という仮定の下では自然数補正鎖が得られる。その値 \(\sigma_n\) が非有界なら、補正単項式の
+  Hahn 和を \(z\) とする。任意の \(\gamma\in\Gamma\) に対し、
+  \([t^\gamma]F(s_\beta+z)\) の有限依存集合の全添字より後で、さらに
+  \(m\sigma_n>\gamma\) となる段階を取る。この係数はその有限近似での係数に等しく、その評価の
+  付値は \(m\sigma_n>\gamma\) なので零である。全係数が零となり
+  \(F(s_\beta+z)=0\) で矛盾する。従って新しい鎖は有界で、\(\beta\) の終端状態を与える。
+
+  最後に極限へのランクの狭義増加を示す。\(\alpha<\beta\) に対し
+  \(\alpha<\eta<\beta\) を取る。いま示した評価係数の安定性により、
+  \(m\rho_\eta=\Val(F(s_\eta))\) より低い \(F(s_\beta)\) の全係数は零である。従って
+  \(m\rho_\eta\le\Val(F(s_\beta))=m\rho_\beta\) であり、
+  \(\rho_\alpha<\rho_\eta\le\rho_\beta\) である。これですべての帰納法の節が閉じる。
+\end{proof}
+
+\begin{definition}[Hartogs 順序数]
+\label{def:hartogs}
+  集合 \(X\) の濃度を \(\#X\)、\(\#X\) より真に大きい最小の基数である後続基数を
+  \((\#X)^+\) と書く。基数 \(\kappa\) に対し、濃度 \(\kappa\) を持つ最小の順序数を
+  \(\operatorname{ord}(\kappa)\) とする。\emph{Hartogs 順序数}を
+  \[
+    h(X)=\operatorname{ord}\bigl((\#X)^+\bigr)
+  \]
+  と定め、その先行元全体からなる整列集合を \(|h(X)|\) と書く。
+\end{definition}
+
+\(|h(X)|\) の濃度は \((\#X)^+\) である。単射 \(|h(X)|\to X\) があれば
+\((\#X)^+\le\#X\) となり、\(\#X<(\#X)^+\) に反する。従ってこの定義は通常の
+Hartogs 性質、すなわち \(X\) へ単射を持たない整列集合を与える。これは同じ性質を持つ
+最小の始順序数とも同値である。以下で用いる集合論はこの基数論的議論だけである。
+
+\begin{lemma}[Hartogs の障害]
+\label{lem:hartogs}
+  \(|h(\Gamma)|\) から順序集合 \(\Gamma\) への狭義単調写像は存在しない。
+\end{lemma}
+\begin{proof}
+  狭義単調写像は単射である。一方、\namedref{定義}{def:hartogs}直後の基数論的議論により
+  \(|h(\Gamma)|\) から \(\Gamma\) の台集合への単射は存在しない。
+\end{proof}
+
+\begin{lemma}[終端障害の解消]
+\label{lem:terminal-prefix-resolution}
+  \((F,m)\) の終端障害を固定し、\(m\) 未満の正規化された奇数 Newton 問題がすべて
+  解決済みで、上で定義した根またはステップ性が成り立つとする。このとき終端障害は解消され、
+  \(F\) は \(\mathfrak m\) 内に根を持つ。
+\end{lemma}
+\begin{proof}
+  元の問題が \(\mathfrak m\) 内に根を持たないと仮定する。この仮定の下では、平行移動後の
+  問題で得た根は元の問題へ移送されるため、各段階の「根」の選択肢は排除される。
+  根またはステップ性は最初にある整係数持ち上げを選ぶ。任意に指定した持ち上げも Hahn 体上では
+  同じ多項式へ写り、\(\Ocal\hookrightarrow k((\Gamma))\) の単射性から二つの持ち上げは等しい。
+  従って、\namedref{命題}{prop:terminal-process-invariant}が要求する持ち上げ固定形を得る。
+  これを最初の終端障害に適用すると、すべての
+  \(\alpha\in|h(\Gamma)|\) に対して平行移動付き終端状態 \(S_\alpha\) が構成され、そのランク
+  \(\rho_\alpha\) は狭義単調に増加する。従って狭義単調写像
+  \[
+    |h(\Gamma)|\longrightarrow\Gamma
+  \]
+  を得るが、これは\namedref{補題}{lem:hartogs}に反する。従って根が存在しないという仮定が
+  誤りである。
+\end{proof}
+
+\begin{proposition}[重複度 1 の場合]
+\label{prop:multiplicity-one-core}
+  重複度 1 の正規化された奇数 Newton 問題は、\(\mathfrak m\) に根を持つ。
+\end{proposition}
+\begin{proof}
+  根がないと仮定する。このとき零は非根状態である。各後続順序数では
+  \namedref{補題}{lem:one-block-successor}が次のブロックを与える。極限順序数では、すでに
+  構成した各対象は同じ一つの再帰の制限なので、最下端の始点、対応する終点値、初切片 Hahn 和が
+  自然な極限互換性を満たす。\namedref{命題}{prop:one-block-limit-prefix}を適用して極限初切片全体の
+  整合的過程を作る。分離されたブロック差は Hahn 総和可能なので、極限の始点を
+  \[
+    x_\lambda=x_0+\sum_{\xi<\lambda}(x_\xi^+-x_\xi)
+  \]
+  と定める。各ブロック差の台は正なので \(x_\lambda\in\mathfrak m\) である。
+  分離条件もこの新しい始点へ延長される。実際、\(\alpha<\lambda\) に対して
+  \(\beta=\alpha+1<\lambda\) と置く。整合性から \(x_\beta=x_\alpha^+\) であり、
+  尾部 \(x_\lambda-x_\beta\) の各ブロックの台は \(v(x_\beta)\) 以上にある。
+  従って \(\Val(x_\lambda-x_\beta)\ge v(x_\beta)\) である。\(\Ocal\) 上の
+  Taylor 展開により
+  \[
+    \Val(F(x_\lambda)-F(x_\beta))\ge v(x_\beta),
+    \qquad
+    \Val(F(x_\lambda))\ge v(x_\beta)=v(x_\alpha^+)
+  \]
+  を得る。根がないという仮定の下では \(x_\lambda\) は非根なので、これは必要な
+  分離不等式 \(v(x_\alpha^+)\le v(x_\lambda)\) である。
+  \namedref{補題}{lem:one-block-successor}を
+  \(x_\lambda\) に適用すると、次の後続初切片の最上段ブロックを得る。従って根が現れない限り
+  超限再帰を継続できる。
+
+  \namedref{定義}{def:coherent-one-block}の分離不等式と各ブロック内の厳密な値の増加から、
+  状態の残差値 \(\alpha\mapsto v(x_\alpha)\) は狭義単調である。もし \(|h(\Gamma)|\) 全体まで
+  続けられたなら、これは \(|h(\Gamma)|\) から \(\Gamma\) への狭義単調写像を与え、
+  \namedref{補題}{lem:hartogs} に反する。
+  よって途中で根が現れる。すべての補正は正の付値を持つので、その根は
+  \(\mathfrak m\) に属する。
+\end{proof}
+
+\begin{proposition}[重複度 1 より大きい同重複度分岐の停止]
+\label{prop:transfinite-termination}
+  \(m>1\) を奇数とし、\(m\) 未満の真に小さい奇数重複度の正規化問題がすべて
+  解を持つと仮定し、さらに上で述べた根またはステップ性を仮定する。このとき、零が
+  剰余根として重複度 \(m\) を持つ正規化問題は \(\mathfrak m\) に根を持つ。
+\end{proposition}
+\begin{proof}
+  解がないと仮定する。根またはステップ性により、一つの整係数持ち上げと、根を持たない
+  自然数補正鎖 \((x_n)\) が得られる。実際、下側辺が生じれば
+  \namedref{命題}{prop:lower-edge}と真に小さい重複度に関する仮定から根が得られ、それ以外では
+  \namedref{補題}{lem:successor-correction}が次項を与える。その補正値を \(\rho_n\) とする。まず
+  \((\rho_n)\) が非有界と仮定する。狭義増加する補正単項式は Hahn 総和可能なので、
+  その和を \(x\) と書く。\(\gamma\in\Gamma\) を固定し、
+  \namedref{補題}{lem:ordinal-eval-finite}の有限集合の全添字より後へ進み、さらに必要なら
+  \(m\rho_n>\gamma\) となるまで進んで \(n\) を取る。すると \(F(x)\) の \(t^\gamma\) の係数は
+  この有限近似の係数に一致する。しかし
+  \[
+    \Val(F(x_n))=m\rho_n>\gamma
+  \]
+  だからこの係数は零である。\(\gamma\) は任意なので \(F(x)=0\) となり、解がないという
+  仮定に反する。
+
+  従って補正値は有界であり、この鎖は、その補正を生成する固定された係数・補正データと
+  合わせて終端障害をなす。
+  \namedref{補題}{lem:terminal-prefix-resolution}により、その終端障害自身が
+  \(\mathfrak m\) 内の解を与えるので矛盾する。
+\end{proof}
+
+\section{Hahn 体の奇数次数根と実閉性}
+\label{sec:hahn-conclusion}
+
+\begin{lemma}[最高次項が支配する slope]
+\label{lem:dominating-slope}
+  \(\Gamma\) が非自明であると仮定する。
+  \(0\ne F(X)=\sum_i a_iX^i\in k((\Gamma))[X]\) とし、
+  \(n=\deg F\), \(\gamma_n=\Val(a_n)\) と置く。このとき、
+  \(a_i\ne0\) を満たすすべての \(i<n\) に対して
+  \[
+    (n-i)\delta<\Val(a_i)-\gamma_n
+    \tag{DS}\label{eq:dominating-slope}
+  \]
+  となる \(\delta\in\Gamma\) が存在する。
+\end{lemma}
+\begin{proof}
+  \(a_i\ne0\) を満たす \(i<n\) は有限個しかない。各々に対し、\(\Gamma\) の可除性により
+  一意な閾値 \(q_i\) を
+  \[
+    (n-i)q_i=\Val(a_i)-\gamma_n
+  \]
+  で定める（順序可換群は捩れを持たないので一意である）。\(\Gamma\) は非自明なので
+  \(\varepsilon>0\) が存在する。これらの閾値が
+  一つ以上あれば \(\delta=\min_i q_i-\varepsilon\) と置き、なければ任意の \(\delta\) を取る。
+  このとき \(\delta<q_i\) はちょうど \eqref{eq:dominating-slope} である。
+\end{proof}
+
+\begin{theorem}[Hahn 体の奇数次数根]
+\label{thm:hahn-odd-roots}
+  \(k((\Gamma))[X]\) の奇数次数多項式はすべて \(k((\Gamma))\) に根を持つ。
+\end{theorem}
+\begin{proof}
+  まず、奇数 \(m>0\) に関する強帰納法により、重複度 \(m\) の正規化問題がすべて
+  \(\mathfrak m\) に根を持つことを示す。\(m=1\) は
+  \namedref{命題}{prop:multiplicity-one-core}である。\(m>1\) なら、帰納法の仮定により
+  \(m\) 未満の真に小さい奇数重複度はすべて解決済みである。\(\mathfrak m\) 内の任意の
+  現在近似で平行移動する。係数が現在の Newton 辺より下にあれば
+  \namedref{命題}{prop:lower-edge}が根を与える。そうでなければ
+  \eqref{eq:successor-nonbelow}の重み不等式、\namedref{補題}{lem:proper-odd-root}、
+  \namedref{補題}{lem:successor-correction}が次の Newton 補正を与える。整係数持ち上げを
+  固定すれば、これは\namedref{命題}{prop:transfinite-termination}が仮定する根またはステップ性
+  そのものであり、同命題から根を得る。これで帰納法が閉じる。
+
+  次に、\(F\) を奇数次数 \(n\) の多項式とする。\(\Gamma\) が自明なら、すべての Hahn 級数の
+  台はその唯一の群要素に含まれるので、Hahn 体は実閉な係数体 \(k\) と同一視でき、奇数次数根は
+  \(k\) に存在する。\(\Gamma\) が非自明とする。\(n\) は奇数なので \(F\ne0\), \(n>0\) である。
+  \(F=\sum_i a_iX^i\), \(\gamma_n=\Val(a_n)\) と書く。
+  \namedref{補題}{lem:dominating-slope}により \(\delta\) を取り、
+  \(\lambda=\gamma_n+n\delta\),
+  \(\widetilde F(X)=t^{-\lambda}F(t^\delta X)\) と置く。その \(n\) 次係数の付値は
+  \(-\lambda+\gamma_n+n\delta=0\) であり、\(i<n\), \(a_i\ne0\) に対する \(i\) 次係数の付値は
+  \[
+    -\lambda+\Val(a_i)+i\delta
+      =\Val(a_i)-\gamma_n-(n-i)\delta>0
+  \]
+  である。\(n\) より高い係数は零なので、\(\widetilde F\) は奇数重複度 \(n\) の正規化問題である。
+  上で示した帰納法により
+  \(\widetilde F(z)=0\) を満たす \(z\in\mathfrak m\) が存在する。従って
+  \[
+    F(t^\delta z)=t^\lambda\widetilde F(z)=0
+  \]
+  であり、\(t^\delta z\) が元の多項式の根である。
+\end{proof}
+
+\begin{proof}[\namedref{定理}{thm:hahn-real-closed} の証明]
+  \namedref{命題}{prop:hahn-squares} が非負元の平方根を与え、\namedref{定理}{thm:hahn-odd-roots}
+  が奇数次数多項式の根を与える。\namedref{命題}{prop:real-closed-criterion} を適用すればよい。
+\end{proof}
+
+\section{分母を有界に保つ Newton--Puiseux 構成}
+\label{sec:puiseux-process}
+
+\(N\ge1\) に対し
+\[
+  \Gamma_N=\frac1N\mathbb Z,\qquad
+  \mathcal P_N(k)=
+  \{x\in k((\mathbb Q)):\Supp(x)\subseteq\Gamma_N\}
+\]
+と置く。このとき \(\Puiseux=\bigcup_{N\ge1}\mathcal P_N(k)\) である。Puiseux 級数と
+多項式係数の有限個の集合は、共通の一つの \(\mathcal P_N(k)\) に含まれる。
+
+これは古典的な Newton--Puiseux の考え方である。以下では、根がこの合併の中に残るために
+必要な分母の制御を明示する。古典的背景については \cite{Walker} も参照されたい。
+
+\(\mathcal P_N(k)\) を\emph{固定分母段階 \(N\)}と呼ぶ。その付値環上の多項式について、
+各係数を極大イデアルで還元して得る多項式を\emph{剰余多項式}という。剰余根 \(a\in k\) が
+\emph{単純}であるとは、剰余多項式が \(a\) で零になり、その導関数は零にならないことをいう。
+現在の重複度が
+\(M\) の Newton 段階で、選んだ初期多項式の根の重複度がちょうど \(M\) である場合を
+\emph{最大重複度の場合}と呼ぶ。それより小さい重複度は真に小さい重複度である。
+
+局所環の極大イデアルを \(\mathfrak n\) とする。\(r=1,2,\ldots\) に対する
+\(\mathfrak n^r\) を法とする合同が零の近傍基をなす位相を\emph{極大イデアル位相}という。
+
+\begin{definition}[固定分母段階の冪級数表示]
+\label{def:fixed-level-power-series}
+  \(N\ge1\) に対して \(q=t^{1/N}\) と置き、
+  \[
+    \mathcal O_N=\mathcal P_N(k)\cap\Ocal
+  \]
+  とする。この段階の\emph{冪級数表示}とは、係数の添字を取り替える環同型
+  \[
+    \Phi_N:k[[q]]\xrightarrow{\ \sim\ }\mathcal O_N,
+    \qquad
+    \sum_{i\ge0}a_iq^i\longmapsto\sum_{i\ge0}a_it^{i/N}
+  \]
+  をいう。像の台は整列されている。逆に、\(\mathcal O_N\) の元に現れる指数はすべて非負で
+  \(\frac1N\mathbb Z\) に属するため、一意的に \(i/N\), \(i\in\mathbb N\) と書ける。この
+  \(i\) で添字を戻す写像が逆写像であり、\((i+j)/N=i/N+j/N\) なので、和と畳み込み積も
+  保たれる。
+\end{definition}
+
+\begin{lemma}[固定分母段階の完備性]
+\label{lem:fixed-level}
+  \(\mathcal O_N\) は、その極大イデアル位相に関して完備である。
+\end{lemma}
+\begin{proof}
+  \namedref{定義}{def:fixed-level-power-series}の冪級数表示の下で、\(\mathcal O_N\) の
+  極大イデアルは \((q)\) に対応する。従って \((q)^r\) を法とする合同は
+  \(1,q,\ldots,q^{r-1}\) の係数が一致することを意味する。従って Cauchy 列の各係数は
+  やがて一定になる。その最終値を係数に持つ冪級数を取れば、元の列は任意の \((q)^r\) を
+  法としてこの冪級数へ収束する。この極限を \(\Phi_N\) で移せば、\(\mathcal O_N\) の
+  完備性を得る。
+\end{proof}
+
+\begin{lemma}[分母を変えない単純根の持ち上げ]
+\label{lem:simple-lift}
+  \(F\in\mathcal O_N[X]\) とし、その剰余多項式が \(a\in k\) を単純根に持つとする。このとき
+  \(F\) は \(a\) に還元される \(\mathcal O_N\) 内の根を持つ。
+\end{lemma}
+\begin{proof}
+  これは完備局所環に対する Hensel の補題の単純根形である。その Newton 議論を記す。
+  \(a\) の持ち上げ \(x_0\) を取る。このとき \(F(x_0)\in(q)\) であり、
+  \(F'(x_0)\notin(q)\) なので \(F'(x_0)\) は単元である。Newton 反復
+  \[
+    x_{n+1}=x_n-\frac{F(x_n)}{F'(x_n)}
+  \]
+  を定め、\(e_n=F(x_n)\) と置く。多項式の Taylor 展開により、ある
+  \(R_n\in\mathcal O_N[T]\) に対して
+  \[
+    F(x_n+h)=F(x_n)+F'(x_n)h+h^2R_n(h)
+  \]
+  である。\(h=-e_n/F'(x_n)\) とすると最初の二項が相殺されるので
+  \[
+    v(e_{n+1})\ge2v(e_n),\qquad
+    v(x_{n+1}-x_n)=v(e_n)
+  \]
+  を得る。また \(x_{n+1}\equiv x_n\pmod{(q)}\) だから
+  \(F'(x_{n+1})\equiv F'(x_n)\not\equiv0\pmod{(q)}\) であり、以後の導関数も単元である。
+  \(v(e_0)\ge1/N\) なので、帰納的に \(v(e_n)\ge2^n/N\) となり、\((x_n)\) は Cauchy 列である。
+  \namedref{補題}{lem:fixed-level} により \(x_n\to x\in\mathcal O_N\) であり、
+  \(v(e_n)\to\infty\) と多項式評価の連続性から \(F(x)=0\) を得る。
+  さらに \(x\equiv a\pmod{(q)}\) である。
+\end{proof}
+
+\begin{lemma}[最大重複度の場合の分母格子保存]
+\label{lem:full-multiplicity-denominator}
+  \(F\in\Ocal[X]\), \(y\in\Ocal\) とし、\(F\) の全係数と \(y\) の台が
+  \(\Gamma_N\) に含まれるとする。\(M>0\), \(\delta>0\), \(\gamma=M\delta\) とする。
+  \(F(X+y)\) の \(X^M\) の係数が単元で、
+  \(\Init_{\delta,\gamma}(F(X+y))\) が \(c\in k^\times\) を重複度ちょうど \(M\) の根に持つなら、
+  \(\delta\in\Gamma_N\) である。
+\end{lemma}
+\begin{proof}
+  \(i>M\) なら、平行移動後の係数は付値非負なので、その Newton 重みは
+  \(i\delta>M\delta=\gamma\) 以上である。従って初期多項式の次数は \(M\) 以下である。
+  一方、\(M\) 次係数は単元だから、初期多項式の \(M\) 次係数は非零である。よって次数は
+  ちょうど \(M\) であり、重複度 \(M\) の根を持つことから
+  \[
+    I(T)=u(T-c)^M,\qquad u\ne0
+  \]
+  と書ける。その \(T^{M-1}\) の係数は \(-uMc\ne0\) である。平行移動後の \(M\) 次係数は
+  単元なので、重み水準 \(\gamma\) 上でのその指数は \(0=\gamma-M\delta\) である。一方、
+  \(T^{M-1}\) の係数は指数 \(\gamma-(M-1)\delta\) の平行移動後の \((M-1)\) 次係数から
+  来る。従ってこの指数は \(\delta\) に等しい。\(y\) による平行移動は有限和と有限積しか
+  用いないので、\(\Gamma_N\) に台を持つ係数を同じ格子内に保つ。従ってこの平行移動後の
+  係数の台、したがって \(\delta\) は \(\Gamma_N\) に属する。
+\end{proof}
+
+\begin{lemma}[一つの有理分母格子内の増加列は非有界]
+\label{lem:lattice-chain}
+  \(f:\mathbb N\to\mathbb Q\) とする。\(f\) が狭義単調増加で、すべての \(n\) に対して
+  \(f(n)\in\Gamma_N\) なら、\(f\) は上に有界でない。
+\end{lemma}
+\begin{proof}
+  より正確には
+  \[
+    f(n+1)-f(n)\ge\frac1N,\qquad
+    f(n)\ge f(0)+\frac nN
+  \]
+  が成り立つ。
+  \(\Gamma_N\) の二元の差は再び \(\Gamma_N\) に属し、正の元は \(1/N\) 以上である。
+  これらを足し合わせれば第 2 の不等式を得る。上界 \(b\) があれば
+  \(n>N(b-f(0))\) を取ることで \(f(0)+n/N>b\) となり、矛盾する。
+\end{proof}
+
+\begin{theorem}[分母有界な奇数次数根]
+\label{thm:puiseux-odd-roots}
+  \(\Puiseux\) 上の奇数次数多項式はすべて \(\Puiseux\) に根を持つ。
+\end{theorem}
+\begin{proof}
+  与えられた多項式を \(P\) とする。その係数を一つの分母段階に入れ、
+  \(d=\deg P\) と置き、最高次係数の付値を \(\gamma_d\) と書く。
+  \namedref{補題}{lem:dominating-slope}を \(\Gamma=\mathbb Q\) に適用して \(\delta\) を取り、
+  \(\lambda=\gamma_d+d\delta\) と置く。\(\delta,\lambda\in\Gamma_N\) となるよう分母を
+  一度拡大する。\namedref{定理}{thm:hahn-odd-roots}の証明と同じ係数計算により、
+  \[
+    F(X)=t^{-\lambda}P(t^\delta X)
+  \]
+  は全係数が \(\mathcal P_N(k)\) に属する正規化問題である。\(F\) の奇数重複度について
+  強帰納法を行う。剰余多項式の単純根は\namedref{補題}{lem:simple-lift} で持ち上げる。
+  真に小さい奇数重複度 \(r<M\) の場合は、1 回の平行移動と 1 回の単項式拡大で正規化する。
+  新たに現れる単項式の有理指数は有限個である。スカラー定数は \(k\) に属して台は零にあり、
+  既存の係数はすでに共通分母を持つ。従って \(N\) を既存および新しい分母の共通倍数に
+  置き換えれば、変換後の全係数は一つの分母段階に入る。\(r\) に対する帰納法の仮定がある分母有界段階の根を与え、この二つの有限変換を
+  戻しても分母は有界である。従って重複度が下がる分岐での分母拡大は有限回であり、無限に続き得る
+  のは次に扱う最大重複度分岐だけである。
+
+  現在の重複度を \(M\) とする。最大重複度の場合には、
+  \namedref{補題}{lem:full-multiplicity-denominator}によりすべての
+  平行移動後の多項式とすべての補正が帰納的に同じ \(\Gamma_N\) に留まる。有限段階で
+  停止すれば補正の有限和が \(\mathcal P_N(k)\) の根である。停止しない場合、補正を
+  \(c_nt^{\delta_n}\) と書くと、\(\delta_n\) は \(\Gamma_N\) 内の狭義単調列なので、
+  \namedref{補題}{lem:lattice-chain} により非有界である。
+
+  補正族は Hahn 総和可能で、その和 \(x\) の台も \(\Gamma_N\) に含まれる。指数
+  \(\gamma\) を固定する。まず\namedref{補題}{lem:ordinal-eval-finite}の有限集合の全添字より
+  後へ進み、さらに必要なら \(\delta_n>\gamma\) となるまで \(n\) を増やす。すると
+  \(F(x)\) の \(t^\gamma\) の係数は第 \(n\) 近似の係数に等しい。この段階で後続補正は
+  \(\Val(F(x_n))=M\delta_n\) を与える。\(M>0\), \(\delta_n>\gamma\) だから、この付値は
+  \(\gamma\) より大きい。従って \(F(x_n)\)、したがって \(F(x)\) の \(t^\gamma\) の係数は
+  零である。よって \(F(x)\) の全係数が零であり、
+  \(F(x)=0\) である。従って \(x\in\mathcal P_N(k)\) であり、
+  \(t^\delta x\in\Puiseux\) が元の多項式 \(P\) の根である。
+\end{proof}
+
+\begin{proposition}[非負 Puiseux 級数は平方]
+\label{prop:puiseux-squares}
+  \(\Puiseux\) の非負元はすべて \(\Puiseux\) 内の平方である。
+\end{proposition}
+\begin{proof}
+  \(x=0\) は明らかである。\(0<x\in\mathcal P_N(k)\) とする。
+  \namedref{第}{sec:square-roots}節の先頭項の議論では先頭
+  指数を半分にし、二項級数では \(\Gamma_N\) 内の指数の有限和だけを用いる。従って
+  構成された平方根の台は \(\Gamma_{2N}\) に含まれ、\(\Puiseux\) に属する。
+\end{proof}
+
+\begin{proof}[\namedref{定理}{thm:puiseux-real-closed} の証明]
+  \namedref{命題}{prop:puiseux-squares}、\namedref{定理}{thm:puiseux-odd-roots}、
+  \namedref{命題}{prop:real-closed-criterion} を順に適用する。
+\end{proof}
+
+\section{実係数の場合の系}
+\label{sec:real}
+
+\(\mathbb R\) が実閉であるという古典的事実を用いる。これは、非負実数が実数の平方根を持ち、
+奇数次数の実係数多項式が実根を持つことと同値である。
+
+\begin{corollary}[実係数有理数値群 Hahn 体]
+\label{cor:real-rational-hahn}
+  順序 Hahn 体 \(\mathbb R((\mathbb Q))\) は実閉である。
+\end{corollary}
+\begin{proof}
+  順序加法群 \(\mathbb Q\) は可除である。実際、\(q\in\mathbb Q\) と \(n>0\) に対し
+  \(q/n\) は \(n(q/n)=q\) を満たす。\namedref{定理}{thm:hahn-real-closed} で
+  \(k=\mathbb R\)、\(\Gamma=\mathbb Q\) とすればよい。
+\end{proof}
+
+\begin{corollary}[実係数 Puiseux 級数体]
+\label{cor:real-puiseux}
+  \(\mathcal P(\mathbb R)\) は実閉である。
+\end{corollary}
+\begin{proof}
+  \namedref{定理}{thm:puiseux-real-closed} で \(k=\mathbb R\) とすればよい。
+\end{proof}
+
+\appendix
+
+\section{Lean 形式化との対応}
+\label{sec:lean}
+
+本文は純粋に数学的に記述し、Lean 固有の用語を用いない。この付録では、本文の場合分け、
+帰納法の変数、極限構成、分母制御が、維持されている形式証明と一致することを監査するための
+対応だけを記録する。ここでの宣言名と module 名は照合用の印であり、本文の数学的議論の
+代用ではない。左列の各数学的主張全体から、本文中の完全な主張と証明へ移動できる。
+\lean{HahnField.exists_leadingTerm_decomposition_of_pos},
+\lean{KSameMultiplicityOrdinalJetChain},
+\lean{iterateFixedLiftTerminalOrdinalPrefixState_invariant},
+\lean{not_bddAbove_range_of_strictMono_of_common_denominator} は Lean で \texttt{private} として
+宣言されており、該当ソースを照合するための印であって、import して使える大域的な宣言名ではない。
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.52\textwidth}
+  >{\raggedright\arraybackslash}p{0.42\textwidth}@{}}
+\toprule
+\textbf{数学的主張} & \textbf{形式化との対応と役割}\\
+\midrule
+\endhead
+\claimref{thm:hahn-real-closed}{定理}{\(k((\Gamma))\) の実閉性}
+  & \lean{hahnKaplansky_realClosed_of_realClosed_divisible}.\\
+\claimref{thm:puiseux-real-closed}{定理}{\(\mathcal P(k)\) の実閉性}
+  & \lean{puiseuxSeries_isRealClosed}.\\
+\claimref{prop:real-closed-criterion}{命題}{順序体が実閉であるための判定条件}
+  & \lean{IsRealClosed.of_linearOrderedField}.\\
+\claimref{lem:leading-term}{補題}{正の Hahn 級数の先頭項正規化}
+  & \lean{HahnField.exists_leadingTerm_decomposition_of_pos}.\\
+\claimref{lem:positive-unit-square}{補題}{\(1\)-unit の二項級数平方根}
+  & \lean{HahnField.exists_square_root_of_orderTop_sub_one_pos}.\\
+\claimref{prop:hahn-squares}{命題}{非負 Hahn 級数は平方}
+  & \lean{HahnField.isSquare_of_nonneg}.\\
+\claimref{lem:newton-correction}{補題}{奇数重複度 Newton 根での正規化}
+  & \lean{HahnField.oddClusterHypotheses_scalePolynomial_comp_single_zero_of_rootMultiplicity}.\\
+\claimref{def:odd-newton-problem}{定義}{正規化された奇数重複度 Newton 問題}
+  & \lean{HahnField.KOddClusterHypotheses}.\\
+\claimref{lem:proper-odd-root}{補題}{奇数次数多項式の非零な奇数重複度根}
+  & \lean{exists_nonzero_root_odd_rootMultiplicity_le_natDegree}.\\
+\claimref{prop:lower-edge}{命題}{下側 Newton 辺による重複度降下}
+  & \lean{HahnField.positiveHahnRoot_of_lowerNewtonEdge}.\\
+\claimref{def:ordinal-terminology}{定義}{順序数の初切片・後続・極限}
+  & mathlib の標準概念。\\
+\claimref{lem:successor-correction}{補題}{後続段階の補正}
+  & \lean{HahnField.exists_oddClusterStep_of_current_edge_initial_root}.\\
+\claimref{lem:successor-values-strict}{補題}{連続する補正値の狭義増加}
+  & \lean{HahnField.KOddClusterFixedStepChainFromData.stepValue_strictMono}.\\
+\claimref{lem:ordinal-hahn-sum}{補題}{分離された整列族の Hahn 和}
+  & \lean{HahnField.HahnSeries.summableFamilyOfSeparatedSupports}.\\
+\claimref{lem:ordinal-eval-finite}{補題}{多項式評価の係数の有限依存性}
+  & \lean{HahnField.OrdinalSupport.HahnSummableFamily.eval_coeff_eq_predTrunc_of_support}.\\
+\claimref{lem:one-block-successor}{補題}{根または重複度 \(1\) のブロック後続}
+  & \lean{HahnField.rootInMaximalIdeal_or_exists_blockSuccessor_at_state}.\\
+\claimref{def:coherent-one-block}{定義}{重複度 \(1\) の整合的 Newton ブロック過程}
+  & \lean{HahnField.OneClusterCoherentBlockChain}.\\
+\claimref{def:coherent-terminal-process}{定義}{高重複度の整合的終端状態過程}
+  & \lean{KSameMultiplicityOrdinalJetChain}.\\
+\claimref{prop:one-block-limit-prefix}{命題}{重複度 \(1\) の極限初切片}
+  & \lean{HahnField.PositiveIioCoherentChainAtBelow.limitStepOfNaturalComponents}.\\
+\claimref{prop:terminal-process-invariant}{命題}{高重複度終端過程の不変量}
+  & \lean{iterateFixedLiftTerminalOrdinalPrefixState_invariant}.\\
+\claimref{def:hartogs}{定義}{Hartogs 順序数}
+  & \lean{hartogsOrdinal}.\\
+\claimref{lem:hartogs}{補題}{\(\Gamma\) に対する Hartogs 障害}
+  & \lean{not_exists_strictMono_cardinal_succ_ord_toType}.\\
+\claimref{lem:terminal-prefix-resolution}{補題}{終端障害の解消}
+  & \lean{HahnField.KSameMultiplicityFixedStepTerminalObstructionData.positiveHahnRoot_of_edgeStep_rootOrStep_terminalResolution}.\\
+\claimref{prop:multiplicity-one-core}{命題}{重複度 1 分岐の解法}
+  & \lean{kOddClusterRootAt_one_of_ordinalStackRec}.\\
+\claimref{prop:transfinite-termination}{命題}{高重複度分岐の停止}
+  & \lean{positiveHahnRoot_of_sameMultiplicityZeroBranch}.\\
+\claimref{lem:dominating-slope}{補題}{最高次項が支配する slope}
+  & \lean{HahnField.exists_natDegree_dominating_slope}.\\
+\claimref{thm:hahn-odd-roots}{定理}{\(k((\Gamma))\) 上の奇数次多項式の根}
+  & \lean{hahnKaplansky_exists_root_of_odd_natDegree}.\\
+\claimref{def:fixed-level-power-series}{定義}{固定分母段階の冪級数表示}
+  & \lean{Puiseux.powerSeriesFixedDenominatorValuationSubringEquiv}.\\
+\claimref{lem:fixed-level}{補題}{固定分母段階の完備性}
+  & \lean{Puiseux.fixedDenominatorValuationSubring_isAdicComplete}.\\
+\claimref{lem:simple-lift}{補題}{分母を変えない単純根の持ち上げ}
+  & \lean{Puiseux.levelSimpleRootLiftHypothesis_of_isAdicComplete}.\\
+\claimref{lem:full-multiplicity-denominator}{補題}{最大重複度での分母保存}
+  & \lean{Puiseux.hasDenominator_newtonStep_of_full_initial_rootMultiplicity}.\\
+\claimref{lem:lattice-chain}{補題}{\(\frac1N\mathbb Z\) 内の狭義増加列の非有界性}
+  & \lean{not_bddAbove_range_of_strictMono_of_common_denominator}.\\
+\claimref{thm:puiseux-odd-roots}{定理}{分母有界な奇数次多項式根}
+  & \lean{puiseuxSeries_exists_root_of_odd_natDegree}.\\
+\claimref{prop:puiseux-squares}{命題}{非負 Puiseux 級数は平方}
+  & \lean{puiseuxSeries_isSquare_of_nonneg}.\\
+\claimref{cor:real-rational-hahn}{系}{\(\mathbb R((\mathbb Q))\) の実閉性}
+  & \lean{realRationalHahnField_isRealClosed}.\\
+\claimref{cor:real-puiseux}{系}{\(\mathcal P(\mathbb R)\) の実閉性}
+  & \lean{realPuiseuxSeries_isRealClosed}.\\
+\bottomrule
+\end{longtable}
+
+\section{再現方法と参考文献}
+\label{sec:reproducibility}
+
+機械検証された形式化は次で再構築できる。
+\begin{verbatim}
+lake build
+lake build HahnKaplanskyRealClosedness.Examples
+lake env lean HahnKaplanskyRealClosedness/AxiomAudit.lean
+lake env lean HahnKaplanskyRealClosedness/Smoke.lean
+lake env lean HahnKaplanskyRealClosedness/PuiseuxSmoke.lean
+task lint
+\end{verbatim}
+公開定理の公理監査が報告するのは、基礎的な標準公理
+\verb|propext|、\verb|Classical.choice|、\verb|Quot.sound| のみである。
+
+\begin{thebibliography}{9}
+\bibitem{Kaplansky}
+  I. Kaplansky, \emph{Maximal fields with valuations},
+  Duke Mathematical Journal 9 (1942), 303--321.
+\bibitem{EnglerPrestel}
+  A. J. Engler and A. Prestel, \emph{Valued Fields},
+  Springer Monographs in Mathematics, Springer, 2005.
+\bibitem{Walker}
+  R. J. Walker, \emph{Algebraic Curves},
+  Princeton Mathematical Series 13, Princeton University Press, 1950.
+\end{thebibliography}
+
+\end{document}

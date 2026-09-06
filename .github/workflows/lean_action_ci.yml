@@ -1,0 +1,43 @@
+name: Lean
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          use-github-cache: true
+          build-args: HahnKaplanskyRealClosedness HahnKaplanskyRealClosedness.Examples
+
+      - name: Build the complete public library
+        run: lake build HahnKaplanskyRealClosedness HahnKaplanskyRealClosedness.Examples HahnKaplanskyRealClosedness.AxiomAudit
+
+      - name: Run the canonical public smoke tests
+        run: |
+          lake env lean HahnKaplanskyRealClosedness/Smoke.lean
+          lake env lean HahnKaplanskyRealClosedness/PuiseuxSmoke.lean
+
+      - name: Audit the public theorem axioms
+        run: |
+          lake env lean HahnKaplanskyRealClosedness/AxiomAudit.lean > axiom-report.txt
+          if grep -Fq "sorryAx" axiom-report.txt; then
+            cat axiom-report.txt
+            exit 1
+          fi
+          if rg -n '^[[:space:]]*(axiom|unsafe|set_option)[[:space:]]|\b(sorry|admit)\b' \
+              HahnKaplanskyRealClosedness HahnKaplanskyRealClosedness.lean --glob '*.lean'; then
+            exit 1
+          fi
+          cat axiom-report.txt
+
+      - name: Run the mathlib style linter
+        run: lake exe lint-style HahnKaplanskyRealClosedness.Examples

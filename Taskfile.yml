@@ -1,0 +1,50 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build the complete Lean library
+    cmds:
+      - lake build
+
+  public:
+    desc: Build the public theorem examples
+    deps:
+      - build
+    cmds:
+      - lake build HahnKaplanskyRealClosedness.Examples
+
+  audit:
+    desc: Check the standard axiom dependencies of the public theorems and concrete real instance
+    deps:
+      - build
+    cmds:
+      - lake env lean HahnKaplanskyRealClosedness/AxiomAudit.lean
+
+  smoke:
+    desc: Check the canonical Hahn, Puiseux, and real-number smoke tests
+    deps:
+      - build
+    cmds:
+      - lake env lean HahnKaplanskyRealClosedness/Smoke.lean
+      - lake env lean HahnKaplanskyRealClosedness/PuiseuxSmoke.lean
+
+  lint:
+    desc: Run mathlib's text-based style linter
+    cmds:
+      - lake exe lint-style HahnKaplanskyRealClosedness.Examples
+
+  proof-pdf:
+    desc: Build the complete Lean-aligned English and Japanese mathematical proofs
+    cmds:
+      - bash docs/build_proof_pdfs.sh
+
+  verify:
+    desc: Run the reproducible public verification suite
+    deps:
+      - build
+    cmds:
+      - lake build HahnKaplanskyRealClosedness.Examples HahnKaplanskyRealClosedness.AxiomAudit
+      - lake env lean HahnKaplanskyRealClosedness/Smoke.lean
+      - lake env lean HahnKaplanskyRealClosedness/PuiseuxSmoke.lean
+      - lake exe lint-style HahnKaplanskyRealClosedness.Examples
+      - git diff --check

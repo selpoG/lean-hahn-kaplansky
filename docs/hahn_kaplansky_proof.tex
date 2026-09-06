@@ -1,0 +1,1508 @@
+\documentclass[11pt]{article}
+
+% Keep byte-for-byte output stable across rebuild directories and wall times.
+\pdfinfoomitdate=1
+\pdftrailerid{}
+\pdfsuppressptexinfo=15
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array,tabularx,longtable}
+\usepackage{seqsplit}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Real Closedness of Hahn and Puiseux Series Fields},
+  pdfauthor={selpo}
+}
+
+\newcommand{\Hahn}{k((\Gamma))}
+\newcommand{\Puiseux}{\mathcal P(k)}
+\newcommand{\Val}{v}
+\newcommand{\Supp}{\operatorname{supp}}
+\newcommand{\lc}{\operatorname{lc}}
+\newcommand{\Init}{\operatorname{in}}
+\newcommand{\Res}{\operatorname{res}}
+\newcommand{\Ocal}{\mathcal O}
+\newcommand{\Odd}{\operatorname{Odd}}
+\newcommand{\lean}[1]{\texttt{\expandafter\seqsplit\expandafter{\detokenize{#1}}}}
+\newcommand{\namedref}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\newcommand{\claimref}[3]{%
+  \hyperref[#1]{\textbf{#2~\ref*{#1}:} #3}}
+
+\newtheoremstyle{proofnote}
+  {6pt}{6pt}{\normalfont}{}{\bfseries}{.}{.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\theoremstyle{proofnote}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{Real Closedness of Hahn and Puiseux Series Fields}
+\author{selpo}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  Let \(k\) be a real closed ordered field and let \(\Gamma\) be a divisible
+  ordered abelian group.  We prove that the Hahn field \(k((\Gamma))\) is
+  real closed, and that its bounded-denominator subfield with
+  \(\Gamma=\mathbb Q\) is real closed as well.  The first proof combines
+  valuation-theoretic normalization with transfinite Newton corrections.  At
+  a limit stage the corrections are summed over the whole ordinal initial
+  segment, and a set-theoretic size argument rules out an indefinitely
+  increasing sequence of exponents of the added monomials.  The second proof
+  keeps the corrections inside one rational
+  denominator lattice.  A correction whose selected root retains the current
+  multiplicity cannot leave that lattice,
+  so an infinite sequence of such exponents is unbounded and its Hahn sum is
+  a Puiseux root.
+\end{abstract}
+
+\tableofcontents
+
+\section*{Proof overview}
+\addcontentsline{toc}{section}{Proof overview}
+
+The proof is organized as follows.  The ordered-field criterion reduces
+real closedness to square roots of nonnegative elements and roots of
+odd-degree polynomials.  For Hahn series, the odd-degree problem is converted
+to coefficient conditions over the valuation ring.  Multiplicity one is
+solved by ordinal recursion.  At larger odd multiplicity, a Newton correction
+either reduces the selected root multiplicity or preserves it; the latter
+case is continued over complete ordinal initial segments; a sufficiently long
+continuation would give an impossible injection into \(\Gamma\).  For
+Puiseux series, the root construction is repeated while preserving one common
+denominator lattice, using Newton iteration for a simple root over the
+corresponding power-series ring.
+
+\section{Main statements and the ordered-field criterion}
+\label{sec:main}
+
+An ordered field is called \emph{real closed} if it has no proper algebraic
+extension to which its order extends; equivalently, adjoining a square root
+of \(-1\) gives an algebraically closed field.  Let \(k\) be a real closed
+ordered field and let \(\Gamma\) be a divisible linearly ordered additive
+group.  Here divisible means that, for every
+\(\gamma\in\Gamma\) and every integer \(n\ge1\), there is a (necessarily
+unique) \(\delta\in\Gamma\) with \(n\delta=\gamma\).  A Hahn series over
+\(k\) with exponents in \(\Gamma\) is a formal sum
+\[
+  x=\sum_{\gamma\in\Gamma} a_\gamma t^\gamma
+\]
+whose support
+\[
+  \Supp(x)=\{\gamma\in\Gamma:a_\gamma\ne0\}
+\]
+is well ordered, meaning that every nonempty subset of the support has a
+least element.  Addition is coefficientwise and multiplication is the
+convolution product.  The well-ordering condition is exactly what makes
+every coefficient of a product a finite sum and keeps the support
+well ordered.  The resulting field is denoted by
+\[
+  \Hahn=k((\Gamma)).
+\]
+It is ordered lexicographically: the sign of a nonzero series is the sign of
+the coefficient at the least exponent in its support.
+
+\begin{theorem}[Hahn--Kaplansky]
+\label{thm:hahn-real-closed}
+  The ordered field \(k((\Gamma))\) is real closed.
+\end{theorem}
+
+For \(\Gamma=\mathbb Q\), define the bounded-denominator Puiseux field by
+\[
+  \Puiseux
+  =
+  \left\{
+    x\in k((\mathbb Q)):
+    \text{there is }N\ge1\text{ with }
+    \Supp(x)\subseteq \frac1N\mathbb Z
+  \right\}.
+\]
+The sum, product, and inverse of two elements with a common denominator
+bound have the same property, so \(\Puiseux\) is a subfield of
+\(k((\mathbb Q))\).
+
+\begin{theorem}[Puiseux real closedness]
+\label{thm:puiseux-real-closed}
+  The ordered field \(\Puiseux\) is real closed.
+\end{theorem}
+
+We use the standard characterization of real closed ordered fields; the
+valuation-theoretic background is standard, see \cite{Kaplansky,EnglerPrestel}.
+\begin{proposition}[Ordered-field criterion]
+\label{prop:real-closed-criterion}
+  An ordered field \(K\) is real closed if the following two conditions hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item every \(x\ge0\) in \(K\) is a square;
+    \item every polynomial in \(K[X]\) of odd degree has a root in \(K\).
+  \end{enumerate}
+\end{proposition}
+
+Thus both theorems reduce to the same two tasks.  The square-root task is
+local at the least exponent of a series.  The odd-degree root task is
+global: Newton corrections have to be summed, and their exponents have to
+be shown to remain under control.
+
+\section{Valuation preliminaries and square roots}
+\label{sec:square-roots}
+
+For \(x\ne0\) in \(k((\Gamma))\), put
+\[
+  \Val(x)=\min\Supp(x),\qquad
+  \lc(x)=a_{\Val(x)},
+\]
+and put \(\Val(0)=+\infty\).  The least-exponent rule gives
+\[
+  \Val(xy)=\Val(x)+\Val(y),\qquad
+  \Val(x+y)\ge
+  \min\{\Val(x),\Val(y)\},
+\]
+with equality in the second formula when the two valuations are different.
+The valuation ring and its maximal ideal are
+\[
+  \Ocal=\{x:\Val(x)\ge0\},
+  \qquad
+  \mathfrak m=\{x:\Val(x)>0\}.
+\]
+The residue of an element of \(\Ocal\) is its coefficient at exponent zero.
+An element of \(\Ocal\) is a \emph{unit} when its inverse also belongs to
+\(\Ocal\); equivalently, it has valuation zero.  We call a series, or a
+polynomial coefficient, \emph{integral} when it belongs to \(\Ocal\).
+
+A family \((A_i)_{i\in I}\) of Hahn series is \emph{Hahn summable} if
+\(\bigcup_i\Supp(A_i)\) is well ordered and, for every \(\gamma\in\Gamma\),
+only finitely many \(i\) have \([t^\gamma]A_i\ne0\).  Its Hahn sum is then
+defined coefficientwise by those finite sums.
+
+\begin{lemma}[Leading-term normalization]
+\label{lem:leading-term}
+  If \(x>0\) in \(k((\Gamma))\), then
+  \[
+    x=c\,t^\gamma(1+w)
+  \]
+  for some \(\gamma\in\Gamma\), \(c\in k\) with \(c>0\), and
+  \(w\in\mathfrak m\).
+\end{lemma}
+\begin{proof}
+  Take \(\gamma=\Val(x)\) and \(c=\lc(x)\).  The lexicographic order gives
+  \(c>0\).  Put \(w=c^{-1}t^{-\gamma}x-1\).  The series
+  \(c^{-1}t^{-\gamma}x\) has valuation zero and leading coefficient one;
+  hence its difference from \(1\) has positive valuation.  Thus
+  \(w\in\mathfrak m\), and the stated identity follows from the definition
+  of \(w\).
+\end{proof}
+
+An element \(u\) with \(u-1\in\mathfrak m\), equivalently an element of the
+form \(1+w\) with \(w\in\mathfrak m\), is called a \emph{\(1\)-unit}.
+
+We use Neumann's support lemma: if \(S\) is a well-ordered subset of the
+positive cone of an ordered abelian group, then the additive monoid generated
+by \(S\) is well ordered, and a fixed group element has only finitely many
+representations as a sum of a finite sequence from \(S\).  Consequently the
+family of powers \((w^n)_{n\ge0}\) is Hahn summable whenever
+\(\Supp(w)\subseteq\Gamma_{>0}\).  This is the standard support lemma used in
+the construction of the Hahn field; see \cite{EnglerPrestel}.
+
+\begin{lemma}[A \(1\)-unit has a binomial square root]
+\label{lem:positive-unit-square}
+  If \(u\in k((\Gamma))\) satisfies \(\Val(u-1)>0\), then there is
+  \(s\in k((\Gamma))\) with \(u=s^2\).
+\end{lemma}
+\begin{proof}
+  Put \(w=u-1\).  If \(w=0\), take \(s=1\).  Otherwise let
+  \(\epsilon=\min\Supp(w)>0\).  The binomial series
+  \[
+    s=\sum_{n\ge0}\binom{1/2}{n}w^n
+  \]
+  is a Hahn series.  Indeed, Neumann's support lemma applies to the
+  well-ordered positive set \(\Supp(w)\), so the union of the supports of the
+  powers is well ordered and only finitely many powers contribute to any
+  fixed exponent.  Consequently the
+  binomial identity can be checked coefficient by coefficient.  It gives
+  \(s^2=1+w=u\).
+\end{proof}
+
+\begin{proposition}[Nonnegative elements are squares]
+\label{prop:hahn-squares}
+  Every \(x\ge0\) in \(k((\Gamma))\) is a square.
+\end{proposition}
+\begin{proof}
+  The assertion is clear for \(x=0\).  For \(x>0\), write
+  \(x=c\,t^\gamma(1+w)\) as in \namedref{Lemma}{lem:leading-term}.
+  Divisibility of \(\Gamma\) gives \(\delta\) with
+  \(2\delta=\gamma\), and real closedness of \(k\) gives
+  \(d\in k^\times\) with \(d^2=c\).  By
+  \namedref{Lemma}{lem:positive-unit-square}, choose \(s^2=1+w\).  Then
+  \[
+    x=(d\,t^\delta s)^2.
+  \]
+\end{proof}
+
+\section{Newton reduction for odd-degree polynomials}
+\label{sec:newton-reduction}
+
+Let \(F(X)=\sum_i a_iX^i\in k((\Gamma))[X]\) and let
+\(\delta\in\Gamma\).  In the root construction \(\delta>0\) will be the
+exponent of a monomial correction \(ct^\delta\).  The Newton weight of the
+\(i\)-th term is
+\[
+  W_\delta(i)=\Val(a_i)+i\delta.
+\]
+For \(\mu\in\Gamma\), write \([t^\eta]a\) for the coefficient of a Hahn
+series \(a\) at exponent \(\eta\), and define the Newton polynomial on the
+weight level \(\mu\) by
+\[
+  \Init_{\delta,\mu}(F)(T)
+  =
+  \sum_{\substack{i:\ a_i\ne0\\ W_\delta(i)=\mu}}
+    [t^{\mu-i\delta}]a_i\,T^i
+  \in k[T].
+\]
+Its nonzero terms are exactly the coefficient points on the line of weight
+\(\mu\).  If \(F\ne0\) and
+\(\mu_\delta=\min_{a_i\ne0}W_\delta(i)\), then
+\(\Init_{\delta,\mu_\delta}(F)\) is the usual initial polynomial on the
+lowest Newton line; its coefficient in degree \(i\) is \(\lc(a_i)\) whenever
+\(W_\delta(i)=\mu_\delta\).
+
+For a nonzero polynomial \(P\in k[T]\), the \emph{multiplicity} of a root
+\(c\) is the largest \(r\in\mathbb N\) for which \((T-c)^r\) divides
+\(P\).  Equivalently, \(P(c)=P'(c)=\cdots=P^{(r-1)}(c)=0\) and
+\(P^{(r)}(c)\ne0\).
+
+\begin{lemma}[Normalization at an odd-multiplicity Newton root]
+\label{lem:newton-correction}
+  Let \(\mu\in\Gamma\), assume \(\mu\le W_\delta(i)\) for every \(i\), and
+  suppose \(c\in k\) is a root of \(\Init_{\delta,\mu}(F)\) of positive odd
+  multiplicity \(r\).  Put
+  \[
+    G(Z)=t^{-\mu}F\bigl(t^\delta(Z+c)\bigr)=\sum_j g_jZ^j.
+  \]
+  Then
+  \[
+    \Val(g_j)\ge0,\qquad
+    \Val(g_j)>0\ (j<r),\qquad
+    \Val(g_r)=0.
+  \]
+  Thus \(G\in\Ocal[Z]\), its degree-\(r\) coefficient is a unit, and all
+  coefficients below degree \(r\) lie in \(\mathfrak m\).
+\end{lemma}
+\begin{proof}
+  Write \(F(c\,t^\delta+Y)=\sum_j b_jY^j\).  Expanding gives
+  \[
+    F(c\,t^\delta+Y)
+    =\sum_i a_i\sum_{j=0}^i\binom ij
+       c^{\,i-j}t^{(i-j)\delta}Y^j.
+  \]
+  The contribution to \(b_j\) at exponent \(\mu-j\delta\) is
+  \(t^{\mu-j\delta}\Init_{\delta,\mu}(F)^{(j)}(c)/j!\); after assigning
+  weight \(\delta\) to \(Y\), the corresponding term has total weight
+  \(\mu\).  The multiplicity-\(r\)
+  assumption makes these coefficients vanish for \(j<r\) and makes the
+  coefficient in degree \(r\) nonzero.  All other contributions have
+  strictly larger weighted value.  Therefore
+  \[
+    \Val(b_j)+j\delta\ge\mu,\qquad
+    \Val(b_j)+j\delta>\mu\ (j<r),\qquad
+    \Val(b_r)+r\delta=\mu.
+  \]
+
+  Since \(g_j=t^{j\delta-\mu}b_j\), the three weighted inequalities
+  are exactly the three displayed valuation statements for \(G\).  Together
+  with the assumed positivity and oddness of \(r\), these are precisely the
+  asserted coefficient conditions.
+\end{proof}
+
+\begin{definition}[Normalized odd Newton problem]
+\label{def:odd-newton-problem}
+  A normalized odd Newton problem of multiplicity \(m\) consists of a
+  polynomial \(F\in k((\Gamma))[X]\), with \(m>0\) odd, all of whose
+  coefficients are integral, whose coefficient of \(X^m\) is a unit, and
+  whose coefficients of degree below \(m\) lie in \(\mathfrak m\).
+  Equivalently, the coefficientwise lift of \(F\) to \(\Ocal[X]\) has these
+  last two properties; we use that lift without changing notation whenever
+  the valuation-ring formulation is needed.
+\end{definition}
+
+Here a \emph{translation} is a substitution \(X\mapsto X+a\), and a
+\emph{monomial dilation} is a substitution \(X\mapsto t^\delta X\), possibly
+followed by multiplication of the polynomial by a nonzero monomial
+\(t^\eta\).  A solution of a normalized problem is an element
+\(y\in\mathfrak m\) with \(F(y)=0\).  If the problem was obtained by finitely
+many such transformations, their inverses carry \(y\) to a root of the
+original polynomial.
+
+The next lemma is the point at which real closedness of the residue field
+enters the Newton argument.
+
+\begin{lemma}[An odd initial polynomial has a nonzero odd-multiplicity root]
+\label{lem:proper-odd-root}
+  Let \(I\in k[T]\) have odd degree \(n\) and nonzero constant term.
+  Then \(I\) has a nonzero root of odd multiplicity \(r\), with
+  \(1\le r\le n\).
+\end{lemma}
+\begin{proof}
+  Over a real closed field every irreducible factor has degree one or two.
+  Since \(\deg I\) is odd, some linear factor occurs with odd multiplicity;
+  let its root be \(a\) and its multiplicity be \(r\).  The nonzero
+  constant term says that \(0\) is not a root, hence \(a\ne0\).
+  Positivity of root multiplicity and the elementary bound
+  \(r\le\deg I=n\) give the remaining assertions.
+\end{proof}
+
+For a normalized problem of multiplicity \(m\) with
+\(\Val(a_0)=m\delta\), we call it the \emph{lower-edge case at
+\(\delta\)} when some \(j<m\) satisfies
+\(a_j\ne0\) and \(\Val(a_j)+j\delta<m\delta\).  Thus a coefficient point
+lies below the line through the constant and degree-\(m\) points.  A
+\emph{proper multiplicity} means a multiplicity strictly smaller than
+\(m\).
+
+\begin{proposition}[Lower Newton edges are resolved by multiplicity descent]
+\label{prop:lower-edge}
+  Write \(F(X)=\sum_i a_iX^i\in k((\Gamma))[X]\).  Let \(m\) be odd (hence
+  positive) and assume
+  \[
+    \Val(a_m)=0,\qquad
+    \Val(a_i)>0\quad(0\le i<m),\qquad
+    \Val(a_i)\ge0\quad(i>m).
+  \]
+  Suppose every normalized odd Newton problem of odd multiplicity \(r<m\)
+  has a solution.  Assume that for some \(\delta\in\Gamma\)
+  \[
+    \Val(a_0)=m\delta
+  \]
+  and that there is an index \(j<m\) with \(a_j\ne0\) and
+  \[
+    \Val(a_j)+j\delta<m\delta.
+    \tag{LE}\label{eq:lower-edge-below}
+  \]
+  Then \(F\) has a root of positive valuation.
+\end{proposition}
+\begin{proof}
+  For a slope \(s\), call
+  \(w_s(i)=\Val(a_i)+is\) the Newton weight of the \(i\)-th coefficient.
+  Thus \eqref{eq:lower-edge-below} says exactly that the point belonging to
+  \(a_jX^j\) lies strictly below the line of slope \(-\delta\) through the
+  constant and degree-\(m\) points: both endpoints have weight \(m\delta\).
+
+  The lower point also proves that \(\delta>0\): rearranging its strict
+  inequality gives
+  \(0<\Val(a_j)<(m-j)\delta\), and \(m-j>0\).
+
+  Define the first lower slope by
+  \[
+    \theta=
+    \min_{\substack{0\le i<m\\a_i\ne0}}
+       \frac{\Val(a_i)}{m-i}.
+  \]
+  The set is nonempty by \eqref{eq:lower-edge-below}.  Every number in it is
+  positive because the coefficients below degree \(m\) lie in
+  \(\mathfrak m\), while the index \(j\) in \eqref{eq:lower-edge-below}
+  gives \(\theta<\delta\).  Hence
+  \[
+    0<\theta<\delta.
+    \tag{S}\label{eq:lower-edge-theta}
+  \]
+
+  Consider
+  \[
+    \widetilde F_\theta(T)=t^{-m\theta}F(t^\theta T)
+      =\sum_i t^{(i-m)\theta}a_iT^i.
+  \]
+  If \(i<m\), the definition of \(\theta\) gives
+  \(\Val(a_i)+(i-m)\theta\ge0\).  The same inequality is immediate for
+  \(i=m\), and for \(i>m\) it follows from \(a_i\in\Ocal\) and
+  \(\theta>0\).  Thus \(\widetilde F_\theta\in\Ocal[T]\), and we may reduce
+  it modulo \(\mathfrak m\):
+  \[
+    Q(T)=\overline{\widetilde F_\theta(T)}\in k[T].
+  \]
+  The coefficient of \(T^m\) in \(Q\) is nonzero because
+  \(\Val(a_m)=0\).  All coefficients above degree \(m\) vanish after
+  reduction because their valuations are strictly positive.  Hence
+  \(\deg Q=m\).  An index attaining the minimum defining \(\theta\) gives a
+  nonzero coefficient of \(Q\) below degree \(m\).  Finally,
+  \[
+    \Val(a_0)-m\theta=m(\delta-\theta)>0
+  \]
+  by \eqref{eq:lower-edge-theta}, so \(Q(0)=0\).
+
+  By the same linear--quadratic factorization argument as in
+  \namedref{Lemma}{lem:proper-odd-root}, the odd-degree polynomial \(Q\)
+  has a root \(a\) of positive odd multiplicity \(r\); here we do not need
+  that the root be nonzero.  Necessarily \(r<m\).  Indeed, if \(r=m\), then
+  degree comparison gives \(Q(T)=u(T-a)^m\) for some \(u\ne0\).  Since
+  \(Q(0)=0\), this forces \(a=0\), so \(Q=uT^m\), contradicting the
+  nonzero coefficient of degree \(j<m\).
+
+  Now translate the root \(a\) to zero:
+  \[
+    H(Z)=t^{-m\theta}F\bigl(t^\theta(Z+a)\bigr).
+  \]
+  By \namedref{Lemma}{lem:newton-correction}, \(H\) is a normalized odd
+  Newton problem of multiplicity \(r<m\).  The induction hypothesis gives
+  \(z\in\mathfrak m\) with \(H(z)=0\).  Put
+  \[
+    y=t^\theta(z+a).
+  \]
+  Then \(F(y)=t^{m\theta}H(z)=0\).  Moreover \(z\in\mathfrak m\) and
+  \(a\in k\) imply \(\Val(z+a)\ge0\); together with \(\theta>0\), this gives
+  \(\Val(y)=\theta+\Val(z+a)>0\).  Thus \(y\) is the required root.
+\end{proof}
+
+For \(m>1\), the reduction of a normalized problem modulo \(\mathfrak m\)
+has zero as a root of multiplicity exactly \(m\): all coefficients below
+degree \(m\) vanish, while the degree-\(m\) coefficient does not.  We call
+this the \emph{same-multiplicity zero branch}.  The phrase records this
+specific residue root and its multiplicity; it does not assert that the
+original polynomial already has a root.
+
+\section{Transfinite Newton continuation}
+\label{sec:transfinite}
+
+We now solve the remaining same-multiplicity zero branch by a transfinite
+sequence of Newton corrections.
+
+\begin{definition}[Ordinal terminology]
+\label{def:ordinal-terminology}
+  A well-order is a linear order in which every nonempty subset has a least
+  element.  An ordinal is the order type of a well-ordered set.  If
+  \(\lambda\) is an ordinal, its initial segment before \(\alpha<\lambda\)
+  consists of all \(\beta<\alpha\).  A successor ordinal has the form
+  \(\alpha+1\); a nonzero ordinal with no greatest element is a limit
+  ordinal.  Transfinite recursion defines an object at a successor stage from
+  the preceding object and at a limit stage from the whole earlier initial
+  segment.  We write \(\mathrm{Ord}\) for the class of all ordinals.
+\end{definition}
+
+At a Newton stage \(\alpha\), we retain an approximation
+\(x_\alpha\in\mathfrak m\) and write
+\[
+  F_\alpha(Z)=F(x_\alpha+Z)=\sum_i b_iZ^i.
+\]
+We say that this stage still has multiplicity \(m\) when \(F_\alpha\) is a
+normalized odd Newton problem of multiplicity \(m\) in the sense of
+\namedref{Definition}{def:odd-newton-problem}.  This is only terminology for
+the displayed translated polynomial, not an additional kind of Newton
+process.
+
+\begin{lemma}[Successor correction]
+\label{lem:successor-correction}
+  Let \(F\in\Ocal[X]\), \(m\in\mathbb N\), and \(x\in\mathfrak m\).  Write
+  \(F_x(Z)=F(x+Z)=\sum_i b_iZ^i\), and suppose
+  \(\Val(F(x))=\gamma>0\), \(\rho>0\), and \(m\rho=\gamma\).  Assume every
+  Newton weight of \(F_x\) at \(\rho\) is at least \(\gamma\), and let
+  \(c\in k^\times\) be a root of \(\Init_{\rho,\gamma}(F_x)\).  Then
+  \[
+    x'=x+c t^\rho\in\mathfrak m,
+    \qquad \Val(x'-x)=\rho,
+  \]
+  and \(\Val(F(x'))>\gamma=\Val(F(x))\).
+\end{lemma}
+\begin{proof}
+  Both \(x\) and \(ct^\rho\) have positive valuation, so
+  \(x'\in\mathfrak m\), while \(c\ne0\) gives
+  \(\Val(x'-x)=\rho\).  In the expansion of \(F_x(ct^\rho)\), all terms
+  have weight at least \(\gamma\), and the coefficient at weight
+  \(\gamma\) is precisely \(\Init_{\rho,\gamma}(F_x)(c)=0\).  Hence the
+  entire weight-\(\gamma\) part cancels and
+  \(\Val(F(x'))>\gamma\).
+\end{proof}
+
+At a normalized stage of multiplicity \(m\), condition
+\[
+  \Val(b_i)+i\rho\ge\gamma\qquad(0<i<m)
+  \tag{NB}\label{eq:successor-nonbelow}
+\]
+together with integrality above degree \(m\) puts every weight on or above
+\(\gamma\).  The weight-level polynomial has odd degree \(m\) and nonzero
+constant term, so \namedref{Lemma}{lem:proper-odd-root} supplies the nonzero
+root \(c\) required by \namedref{Lemma}{lem:successor-correction}.
+
+For \(m>1\), a \emph{fixed-lift, fixed-multiplicity Newton chain} is a
+natural-number sequence \((x_n)\) in \(\mathfrak m\), using one fixed
+integral coefficient lift of \(F\), in which every successor is a correction
+from \namedref{Lemma}{lem:successor-correction}.  In
+\(x_{n+1}-x_n=c_nt^{\rho_n}\), we call \(\rho_n\) the
+\emph{correction value} (or correction exponent).
+
+\begin{lemma}[Strict increase of successive correction values]
+\label{lem:successor-values-strict}
+  In a fixed-lift, fixed-multiplicity Newton chain with \(m>1\), the map
+  \(n\mapsto\rho_n\) is strictly increasing.
+\end{lemma}
+\begin{proof}
+  The successor correction gives
+  \(\Val(F(x_{n+1}))>\Val(F(x_n))\).  Writing these values as
+  \(m\rho_{n+1}\) and \(m\rho_n\), respectively, and using that
+  multiplication by the positive integer \(m\) is strictly order preserving
+  gives the claim.
+\end{proof}
+
+\begin{lemma}[Hahn sum of a separated family]
+\label{lem:ordinal-hahn-sum}
+  Let \(I\) be a well-ordered set.  For every \(i\in I\), let \(D_i\) be a
+  Hahn series and let \(\ell_i,u_i\in\Gamma\).  Assume
+  \[
+    \Supp(D_i)\subseteq[\ell_i,u_i),
+    \qquad i<j\Longrightarrow u_i\le\ell_j.
+    \tag{SS}\label{eq:separated-supports}
+  \]
+  Then \((D_i)_{i\in I}\) is Hahn summable.
+\end{lemma}
+\begin{proof}
+  To see that \(U=\bigcup_i\Supp(D_i)\) is well ordered, take a nonempty
+  subset \(A\subseteq U\).  Choose the least index \(i_0\) for which
+  \(A\cap\Supp(D_{i_0})\ne\varnothing\), and then the least element \(a_0\)
+  of that intersection.  No earlier support meets \(A\), and
+  \eqref{eq:separated-supports} puts every element of every later support at
+  least \(u_{i_0}>a_0\).  Thus \(a_0\) is the least element of \(A\).
+  Moreover a fixed exponent cannot belong to two distinct supports: if
+  \(i<j\), membership in both would give
+  \(\gamma<u_i\le\ell_j\le\gamma\).  Hence only finitely many (in fact at
+  most one) summands contribute to each coefficient, proving Hahn
+  summability.
+\end{proof}
+
+In particular, if \(\lambda\) is a limit ordinal and
+\((\rho_\alpha)_{\alpha<\lambda}\) is strictly increasing, apply the lemma
+with \(D_\alpha=c_\alpha t^{\rho_\alpha}\),
+\(\ell_\alpha=\rho_\alpha\), and
+\(u_\alpha=\rho_{\alpha+1}\).  Since \(\alpha+1<\lambda\), this proves that
+\(x_0+\sum_{\alpha<\lambda}c_\alpha t^{\rho_\alpha}\) is a Hahn series.
+
+For a Hahn-summable family \(A=(A_*)\cup(A_i)_{i\in I}\), a polynomial
+\(G(T)=\sum_{j=0}^d b_jT^j\), and \(\gamma\in\Gamma\), define
+\(E_{G,\gamma}(A)\) as follows.  Expand each coefficient
+\([t^\gamma]b_j(\sum A)^j\); collect every ordinary index \(i\in I\) that
+occurs in a tuple with nonzero contribution, and take the union over
+\(0\le j\le d\).  Hahn summability makes this a finite set.  The
+distinguished index \(*\) is not included in \(E_{G,\gamma}(A)\).
+
+\begin{lemma}[Finite dependence of polynomial-evaluation coefficients]
+\label{lem:ordinal-eval-finite}
+  Let \(A=(A_*)\cup(A_i)_{i\in I}\) be a Hahn-summable family, where the
+  distinguished term \(A_*\) is always retained.  For a predicate
+  \(p\) on \(I\), write \(A|_p\) for the family obtained by replacing
+  \(A_i\) by zero when \(p(i)\) is false.  Given
+  \(G\in k((\Gamma))[T]\) and \(\gamma\in\Gamma\), one has
+  \[
+    E_{G,\gamma}(A)\subseteq\{i:p(i)\}
+    \quad\Longrightarrow\quad
+    [t^\gamma]G\!\left(\sum A\right)
+      =[t^\gamma]G\!\left(\sum(A|_p)\right).
+    \tag{FD}\label{eq:finite-dependence}
+  \]
+\end{lemma}
+\begin{proof}
+  By the preceding definition, if \(p\) contains
+  \(E_{G,\gamma}(A)\), truncating away indices outside
+  \(p\) removes none of the contributing tuples, so every summand in the
+  coefficient expansion is unchanged.  This proves
+  \eqref{eq:finite-dependence}.  For an ordinal correction family, any
+  initial segment containing this finite set is therefore sufficiently late.
+\end{proof}
+
+On the multiplicity-\(1\) side, a whole \(\omega\)-block of natural-number
+corrections, rather than one monomial correction, is used as one
+stage of the transfinite recursion.  Fix \(F\in\Ocal[X]\).  The block data
+below make no coefficient or multiplicity assumption on \(F\); those
+assumptions enter only when the data are constructed.  For a nonroot
+\(x\in\mathfrak m\), meaning \(F(x)\ne0\), write
+\(v(x)=\Val(F(x))\in\Gamma\).
+
+A \emph{Newton block successor} is a move from a nonroot
+\(x\in\mathfrak m\) to a nonroot \(x^+\in\mathfrak m\) such that
+  \[
+    v(x)<v(x^+),\qquad
+    \Supp(x^+-x)\subseteq [v(x),v(x^+)).
+  \]
+It is the compressed datum of the limit of one bounded natural correction
+chain.  A further correction from that limit is used only to certify that the
+limit is a rootless state from which the construction can continue; that
+further correction is not part of the block difference.
+
+\begin{lemma}[A root or a multiplicity-\(1\) block successor]
+\label{lem:one-block-successor}
+  Let \(F\in\Ocal[X]\), assume its constant coefficient lies in
+  \(\mathfrak m\) and its linear coefficient is a unit, and let
+  \(x\in\mathfrak m\) be a nonroot.  Then either \(F\) has a root in
+  \(\mathfrak m\), or there is a Newton block successor from \(x\).
+\end{lemma}
+\begin{proof}
+  Translate by \(x\).  Its constant coefficient is \(F(x)\in\mathfrak m\),
+  and its linear coefficient is congruent modulo \(\mathfrak m\) to the
+  original unit coefficient; all contributions from higher degrees contain a
+  positive-valuation power of \(x\).  Thus the translated polynomial is again
+  a normalized multiplicity-\(1\) problem.  Unless a root occurs, repeatedly
+  apply \namedref{Lemma}{lem:successor-correction}.  This gives corrections
+  \(c_nt^{\rho_n}\) with strictly increasing positive values and finite
+  approximations
+  \(x_n=x+\sum_{j<n}c_jt^{\rho_j}\), where
+  \(\Val(F(x_n))=\rho_n\).
+
+  The correction monomials are Hahn summable; put
+  \(x_\omega=x+\sum_nc_nt^{\rho_n}\).  The tail
+  \(x_\omega-x_{n+1}\) has valuation \(\rho_{n+1}\).  Taylor expansion, with
+  integral coefficients and integral arguments, gives
+  \[
+    \Val\bigl(F(x_\omega)-F(x_{n+1})\bigr)\ge\rho_{n+1}.
+  \]
+  Since \(\Val(F(x_{n+1}))=\rho_{n+1}\), it follows that
+  \(\Val(F(x_\omega))\ge\rho_{n+1}>\rho_n\).  If the \(\rho_n\) are unbounded, this says
+  every coefficient of \(F(x_\omega)\) is zero, so \(x_\omega\) is the first
+  alternative.  Otherwise, if no root has occurred, write the finite positive
+  value of \(F(x_\omega)\) as \(\eta\).  It satisfies
+  \(\rho_n<\eta\) for every \(n\).
+
+  At multiplicity \(1\), the non-below condition is empty.  For the
+  translated polynomial at \(x_\omega\), take correction value
+  \(\delta=\eta\).  Its weight-level polynomial has nonzero constant and
+  linear terms and hence a nonzero root.  One further application of
+  \namedref{Lemma}{lem:successor-correction} therefore gives a correction
+  from \(x_\omega\).  In the Lean construction this extra step certifies the
+  bounded omega-block, but its target is not the block endpoint.
+
+  Set \(x^+=x_\omega\).  It is a nonroot in \(\mathfrak m\),
+  \(v(x^+)=\eta>\rho_0=v(x)\), and the support of \(x^+-x\) consists of the
+  \(\rho_n\)'s.  Since \(\rho_0\le\rho_n<\eta\),
+  \[
+    \Supp(x^+-x)\subseteq[\Val(F(x)),\Val(F(x^+))).
+  \]
+  Thus \(x\mapsto x^+\) is the required Newton block successor.
+\end{proof}
+
+\begin{definition}[Coherent multiplicity-\(1\) Newton block process]
+\label{def:coherent-one-block}
+  Let \(I\) be a well-ordered set with least element \(0\).  A
+  \emph{coherent multiplicity-\(1\) Newton block process} on \(I\) consists,
+  for every \(\alpha\in I\), of a nonroot \(x_\alpha\in\mathfrak m\) and a
+  Newton block successor \(x_\alpha^+\), such that \(\alpha<\beta\) implies
+  \[
+    v(x_\alpha^+)\le v(x_\beta),
+  \]
+  and, for every \(\alpha\),
+  \[
+    x_\alpha-x_0=\sum_{\xi<\alpha}(x_\xi^+-x_\xi).
+    \tag{BC}\label{eq:block-coherence}
+  \]
+  The first condition separates the supports of distinct blocks; the second
+  says that every state is the Hahn sum of all preceding block corrections.
+\end{definition}
+
+We shall use the following compatibility package at a nonzero limit ordinal
+\(\lambda\).  For every \(\tau<\lambda\), suppose a coherent block process
+\(C^{<\tau}\) has been constructed on the stages below \(\tau\).  From
+\(C^{<\alpha+1}\), select its final state and final block and call
+them \(x_\alpha\) and \(B_\alpha\), and write \(x_\alpha^+\) for the endpoint
+of \(B_\alpha\).  The family has \emph{natural limit
+compatibility} when the following conditions hold.
+\begin{enumerate}[label=(\roman*)]
+  \item There is one \(x_0\in\mathfrak m\) which is the bottom source of every
+    nonempty \(C^{<\tau}\), and the selected state at index \(0\) also has
+    source \(x_0\).
+  \item If \(\alpha<\beta<\lambda\), the value at the endpoint of
+    \(B_\alpha\) equals the endpoint value of the corresponding block after
+    \(C^{<\beta+1}\) is restricted through \(\alpha\).
+  \item If \(\alpha<\beta<\lambda\), the Hahn sum of the selected blocks
+    before \(\alpha\) equals the Hahn sum of the restriction of
+    \(C^{<\beta+1}\) before \(\alpha\).
+  \item The latter restricted sum equals the prefix sum formed inside
+    \(C^{<\alpha+1}\) itself.
+\end{enumerate}
+Conditions (iii) and (iv) are genuine compatibility assumptions; support
+separation alone does not imply that independently constructed prefixes have
+the same coefficients.
+
+On the higher-multiplicity side, the transfinite state retains the bounded
+natural correction chain itself.  For a normalized problem \(F\) of
+multiplicity \(m\), an \emph{integral coefficient lift} is a polynomial
+\(D\in\Ocal[X]\) which equals \(F\) in the Hahn field, whose coefficients
+below \(m\) lie in \(\mathfrak m\), and whose degree-\(m\) coefficient is a
+unit.  With one such \(D\) fixed, a \emph{Newton correction step} from
+\(A\in\mathfrak m\) to \(A'\in\mathfrak m\) consists of
+\(\gamma,\delta\in\Gamma\) and \(c\in k\) such that
+\[
+  \gamma>0,\quad\delta>0,\quad c\ne0,\quad m\delta=\gamma,
+  \quad A'=A+ct^\delta,
+\]
+\[
+  \Val(D(A))=\gamma,\qquad
+  \Val(A'-A)=\delta,\qquad
+  \Val(D(A'))>\gamma.
+  \tag{NS}\label{eq:newton-step-data}
+\]
+
+The \emph{root-or-step property} says the following for every normalized
+same-multiplicity zero branch \((F,m)\), after roots at all multiplicities
+below \(m\) have been supplied: there is an integral coefficient lift \(D\)
+such that, from every \(A\in\mathfrak m\), either \(F\) already has a root in
+\(\mathfrak m\), or there is a Newton correction step from \(A\), using that
+same \(D\).  Its \emph{fixed-lift form} requires this alternative for every
+integral coefficient lift \(D\).  The two forms agree here: two integral
+lifts have the same image in the Hahn field, and the inclusion
+\(\Ocal\hookrightarrow k((\Gamma))\) is injective, so the lifts are equal.
+
+A sequence \((x_n)_{n\in\mathbb N}\) is a \emph{rootless natural correction
+chain} if \(x_0=0\), all \(x_n\) lie in \(\mathfrak m\), and one integral
+coefficient lift \(D\) makes every move \(x_n\to x_{n+1}\) a Newton
+correction step.  It is \emph{bounded} when its correction values are bounded
+above in \(\Gamma\).  A \emph{terminal obstruction} is a same-multiplicity
+zero branch equipped with such a bounded chain and its fixed lift \(D\).
+
+A \emph{shifted terminal state} over the original polynomial \(F\) consists
+of a shift \(s\in\mathfrak m\), the translated polynomial
+\(F_s(Z)=F(s+Z)\), a terminal obstruction for \(F_s\), and the transport
+taking a root \(z\) of \(F_s\) to the root \(s+z\) of \(F\).  The first correction value of the
+natural chain in this state is called its \emph{rank}.
+
+\begin{definition}[Coherent higher-multiplicity terminal-state process]
+\label{def:coherent-terminal-process}
+  Let \(I\) be a linearly ordered set, let \(F\in k((\Gamma))[X]\), and let
+  \(m\in\mathbb N\).  Write \((S_\alpha)_{\alpha\in I}\) for shifted
+  terminal states for \((F,m)\), \(s_\alpha\) for their shifts, and
+  \(\rho_\alpha\) for their ranks.  (The terminal data in each state already
+  imply that \(m>1\) is odd.)  The family is
+  \emph{coherent} when \(\alpha<\beta\) implies
+  \(\rho_\alpha<\rho_\beta\), and whenever \(\alpha\le\beta\) and
+  \(\gamma<\rho_\alpha\),
+  \[
+    [t^\gamma]s_\alpha=[t^\gamma]s_\beta.
+    \tag{TC}\label{eq:terminal-coherence}
+  \]
+  Stability of polynomial-evaluation coefficients is not included as a
+  field of this definition; it is derived as the recursion invariant below.
+\end{definition}
+
+\begin{proposition}[The multiplicity-\(1\) limit prefix]
+\label{prop:one-block-limit-prefix}
+  Let \(\lambda\) be a nonzero limit ordinal.  Suppose that a process from
+  \namedref{Definition}{def:coherent-one-block} has been constructed on every
+  proper initial segment and that the resulting family has natural limit
+  compatibility.  Then the selected states \(x_\alpha\) and blocks
+  \(B_\alpha\), for \(\alpha<\lambda\), form a coherent Newton block process
+  on the whole initial segment below \(\lambda\).
+\end{proposition}
+\begin{proof}
+  By (ii), the endpoint value of an earlier selected block is the endpoint
+  value of its copy in every later process.  The separation condition in the
+  later process therefore gives
+  \(v(x_\alpha^+)\le v(x_\beta)\) whenever
+  \(\alpha<\beta\).  Hence the selected blocks have separated supports and
+  are Hahn summable by \namedref{Lemma}{lem:ordinal-hahn-sum}.
+
+  It remains to check source coherence.  Fix \(\alpha<\lambda\) and choose
+  \(\beta\) with \(\alpha<\beta<\lambda\), which is possible because
+  \(\lambda\) is a limit ordinal.  Coherence inside \(C^{<\beta+1}\) identifies
+  the difference between its state at \(\alpha\) and its bottom source with
+  its restricted prefix sum.  By (i) the bottom source is \(x_0\), by (iii)
+  the restricted sum is the selected-block sum before \(\alpha\), and by
+  (iv) this is also the prefix already computed in \(C^{<\alpha+1}\).  Thus
+  \[
+    x_\alpha-x_0=\sum_{\xi<\alpha}(x_\xi^+-x_\xi),
+  \]
+  which is exactly \eqref{eq:block-coherence}.  The state, block-successor,
+  and nonroot fields are inherited from the selected final data.  This
+  constructs the required coherent process.
+\end{proof}
+
+\begin{proposition}[Invariant of the higher-multiplicity terminal process]
+\label{prop:terminal-process-invariant}
+  Fix a terminal obstruction for \((F,m)\); its branch data imply that
+  \(m>1\) is odd.  Assume that every normalized problem of multiplicity
+  below \(m\) has been solved, that the fixed-lift root-or-step property
+  holds, and that \(F\) has no root in \(\mathfrak m\).  Let
+  \((S_\beta)_{\beta\in\mathrm{Ord}}\) be the recursively defined family,
+  with shifts \(s_\beta\) and ranks \(\rho_\beta\).  Then for every ordinal
+  \(o\):
+  \begin{enumerate}[label=(\roman*)]
+    \item \(\beta<o\) implies \(\rho_\beta<\rho_o\);
+    \item if \(\beta\le o\) and \(\gamma<\rho_\beta\), then
+      \([t^\gamma]s_o=[t^\gamma]s_\beta\);
+    \item if \(\beta\le o\) and \(\gamma<m\rho_\beta\), then
+      \[
+        [t^\gamma]F(s_o)=[t^\gamma]F(s_\beta);
+        \tag{EC}\label{eq:terminal-eval-coherence}
+      \]
+    \item the map \(\beta\mapsto\rho_\beta\) on \(\beta<o\) is strictly
+      increasing and
+      \[
+        s_o=\sum_{\xi<o}(s_{\xi+1}-s_\xi).
+        \tag{HS}\label{eq:terminal-prefix-sum}
+      \]
+  \end{enumerate}
+  In particular, restriction to any ordinal initial segment is coherent in
+  the sense of \namedref{Definition}{def:coherent-terminal-process}.
+\end{proposition}
+\begin{proof}
+  Use transfinite induction on \(\beta\).  At \(0\), take the original
+  terminal obstruction with shift \(s_0=0\); all four assertions are
+  immediate.
+
+  Suppose \(S_\alpha\) has been constructed.  A lower edge at its first
+  correction value would give a root by
+  \namedref{Proposition}{prop:lower-edge} and the solved lower-multiplicity
+  problems; translating back would contradict the no-root assumption.
+  Thus there is no lower edge.  Advance by the first correction of the
+  bounded chain and replace the chain by its tail, expressed relative to
+  the new source.  The shift increment is a nonzero monomial of
+  value \(\rho_\alpha\), the new chain is bounded, and its first correction
+  value is strictly larger than \(\rho_\alpha\).  The Newton weight estimate
+  behind \eqref{eq:newton-step-data} also says that this move preserves the
+  coefficients of \(F(s_\alpha)\) below \(m\rho_\alpha\).  These facts give
+  rank growth, shift-coefficient stability, evaluation-coefficient stability,
+  and the prefix-sum identity at \(\alpha+1\).
+
+  Now let \(\beta\) be a nonzero limit ordinal.  By induction the increments
+  \(s_{\xi+1}-s_\xi\) are nonzero monomials of the strictly increasing values
+  \(\rho_\xi\).  They are Hahn summable by
+  \namedref{Lemma}{lem:ordinal-hahn-sum}; define \(s_\beta\) to be their sum.
+  This proves \eqref{eq:terminal-prefix-sum}, places \(s_\beta\) in
+  \(\mathfrak m\), and gives \eqref{eq:terminal-coherence}: below
+  \(\rho_\alpha\), every increment from stage \(\alpha\) onward has zero
+  coefficient.  For
+  \(\alpha<\beta\) and \(\gamma<m\rho_\alpha\), the finite set from
+  \namedref{Lemma}{lem:ordinal-eval-finite} is contained in some initial
+  segment \(\eta<\beta\).  Taking \(\eta\ge\alpha\) and using the induction
+  hypothesis at \(\eta\) proves
+  \eqref{eq:terminal-eval-coherence} at the limit.
+
+  The translated polynomial is still a same-multiplicity zero branch.
+  Indeed, translation by \(s_\beta\in\mathfrak m\) sends every coefficient
+  below degree \(m\) into \(\mathfrak m\): in the Taylor expansion, the old
+  coefficients below \(m\) already lie in \(\mathfrak m\), while every term
+  coming from degree at least \(m\) contains a positive power of
+  \(s_\beta\).  Its degree-\(m\) coefficient is the old unit plus terms in
+  \(\mathfrak m\), and hence remains a unit.  Oddness and \(m>1\) are
+  unchanged.  Thus the hypotheses needed at the limit state have not been
+  lost.
+
+  Apply the fixed-lift root-or-step property at the translated polynomial
+  \(F(X+s_\beta)\).  Under the no-root assumption it supplies a natural
+  correction chain.  If its values \(\sigma_n\) were unbounded, its monomial
+  corrections would have a Hahn sum \(z\).  Given \(\gamma\in\Gamma\), take
+  a stage after all indices in the finite-dependence set for the coefficient
+  \([t^\gamma]F(s_\beta+z)\), and then take it still later so that
+  \(m\sigma_n>\gamma\).  The coefficient equals that at this finite
+  approximation, whose evaluation has valuation \(m\sigma_n>\gamma\), so it
+  is zero.  Thus every coefficient vanishes and \(F(s_\beta+z)=0\), a
+  contradiction.  The new chain is therefore bounded and supplies the
+  terminal state at \(\beta\).
+
+  It remains to prove strict rank growth into the limit.  Given
+  \(\alpha<\beta\), choose \(\alpha<\eta<\beta\).  The evaluation-coefficient
+  stability just proved says that every coefficient of \(F(s_\beta)\) below
+  \(m\rho_\eta=\Val(F(s_\eta))\) is zero.  Therefore
+  \(m\rho_\eta\le\Val(F(s_\beta))=m\rho_\beta\).  Hence
+  \(\rho_\alpha<\rho_\eta\le\rho_\beta\).  This completes all induction
+  clauses.
+\end{proof}
+
+\begin{definition}[Hartogs ordinal]
+\label{def:hartogs}
+  For a set \(X\), let \(\#X\) denote its cardinality and let
+  \((\#X)^+\) be the successor cardinal, the least cardinal strictly larger
+  than \(\#X\).  For a cardinal \(\kappa\), let \(\operatorname{ord}(\kappa)\)
+  be the least ordinal of cardinality \(\kappa\).  Define the
+  \emph{Hartogs ordinal} by
+  \[
+    h(X)=\operatorname{ord}\bigl((\#X)^+\bigr).
+  \]
+  We write \(|h(X)|\) for its underlying well-ordered set of predecessors.
+\end{definition}
+
+The underlying set \(|h(X)|\) has cardinality \((\#X)^+\).  An injection
+\(|h(X)|\to X\) would therefore imply
+\((\#X)^+\le\#X\), contradicting the defining inequality
+\(\#X<(\#X)^+\).  Thus this definition has the usual Hartogs property: it
+produces a well-ordered set which cannot inject into \(X\).  Equivalently, it
+is the least initial ordinal with that property.  This cardinal argument is
+the only set-theoretic fact used below.
+
+\begin{lemma}[Hartogs obstruction]
+\label{lem:hartogs}
+  There is no strictly increasing map from \(|h(\Gamma)|\) into the ordered
+  set \(\Gamma\).
+\end{lemma}
+\begin{proof}
+  A strictly increasing map is injective, while the cardinal argument after
+  \namedref{Definition}{def:hartogs} says that no injection from
+  \(|h(\Gamma)|\) into the underlying set of \(\Gamma\) exists.
+\end{proof}
+
+\begin{lemma}[Resolution of a terminal obstruction]
+\label{lem:terminal-prefix-resolution}
+  Fix a terminal obstruction for \((F,m)\), assume every normalized odd
+  problem of multiplicity below \(m\) has been solved, and assume the
+  root-or-step property defined above.  Then the obstruction is resolved:
+  \(F\) has a root in \(\mathfrak m\).
+\end{lemma}
+\begin{proof}
+  Suppose, for a contradiction, that the original problem has no root in
+  \(\mathfrak m\).  A root of any translated problem would transport to a
+  root of the original one, so the root alternative is excluded at every
+  stage.  The root-or-step property initially selects some integral lift.
+  For any prescribed lift, both lifts map to the same Hahn-field polynomial;
+  injectivity of \(\Ocal\hookrightarrow k((\Gamma))\) makes them equal.
+  Hence the property has the fixed-lift form required by
+  \namedref{Proposition}{prop:terminal-process-invariant}.  Applying that
+  proposition to the initial terminal obstruction constructs a shifted terminal state
+  \(S_\alpha\) for every \(\alpha\in|h(\Gamma)|\), with strictly increasing
+  ranks \(\rho_\alpha\).  These ranks define a strictly increasing map
+  \[
+    |h(\Gamma)|\longrightarrow\Gamma,
+  \]
+  contradicting \namedref{Lemma}{lem:hartogs}.  The assumption that no root
+  exists is therefore false.
+\end{proof}
+
+\begin{proposition}[The multiplicity-one case]
+\label{prop:multiplicity-one-core}
+  A normalized odd Newton problem of multiplicity one has a solution in
+  \(\mathfrak m\).
+\end{proposition}
+\begin{proof}
+  Assume that no root exists.  Zero is then a nonroot state.  At every
+  successor ordinal, \namedref{Lemma}{lem:one-block-successor} supplies the
+  next block.  At a limit ordinal, the already constructed objects are
+  restrictions of this one recursion: their bottom source, corresponding
+  endpoint values, and prefix Hahn sums therefore satisfy natural limit
+  compatibility.  Apply
+  \namedref{Proposition}{prop:one-block-limit-prefix} to obtain the coherent
+  process on the whole limit initial segment.  Its separated block
+  differences are Hahn summable, so define the limit source by
+  \[
+    x_\lambda=x_0+
+      \sum_{\xi<\lambda}(x_\xi^+-x_\xi).
+  \]
+  Every block difference has positive support, hence
+  \(x_\lambda\in\mathfrak m\).  The separation condition also extends to
+  this new source.  For \(\alpha<\lambda\), put \(\beta=\alpha+1<\lambda\).
+  Coherence gives \(x_\beta=x_\alpha^+\), and every block in the tail
+  \(x_\lambda-x_\beta\) has support at least \(v(x_\beta)\).
+  Thus \(\Val(x_\lambda-x_\beta)\ge v(x_\beta)\).  Taylor expansion over
+  \(\Ocal\) gives
+  \[
+    \Val(F(x_\lambda)-F(x_\beta))\ge v(x_\beta),
+    \qquad
+    \Val(F(x_\lambda))\ge v(x_\beta)=v(x_\alpha^+).
+  \]
+  Under the standing no-root assumption \(x_\lambda\) is a nonroot, so
+  this is the required inequality \(v(x_\alpha^+)\le v(x_\lambda)\).
+  Applying \namedref{Lemma}{lem:one-block-successor} at
+  \(x_\lambda\) supplies the top block for the next successor initial
+  segment.  Transfinite recursion therefore continues for as long as no root
+  appears.
+
+  The separation inequality in
+  \namedref{Definition}{def:coherent-one-block}, together with strict
+  increase inside every block, makes the residual values
+  \(\alpha\mapsto v(x_\alpha)\) strictly increasing.  If the construction
+  continued through all of \(|h(\Gamma)|\), these values would define a strictly
+  increasing map from that ordinal into \(\Gamma\), contradicting
+  \namedref{Lemma}{lem:hartogs}.  A root must therefore occur, and all corrections
+  have positive value, so that root lies in \(\mathfrak m\).
+\end{proof}
+
+\begin{proposition}[Termination in the higher-multiplicity branch]
+\label{prop:transfinite-termination}
+  Let \(m>1\) be odd and assume that every normalized problem of proper odd
+  multiplicity below \(m\) has a solution.  Assume also the root-or-step
+  property stated above.  Then a normalized problem whose residue root at
+  zero has multiplicity \(m\) has a solution in \(\mathfrak m\).
+\end{proposition}
+\begin{proof}
+  Suppose there were no solution.  Repeated application of
+  the root-or-step property gives one integral lift and a rootless natural
+  correction chain \((x_n)\), with correction values \(\rho_n\): a lower edge would be
+  solved by \namedref{Proposition}{prop:lower-edge} and the proper-multiplicity
+  hypothesis, while otherwise \namedref{Lemma}{lem:successor-correction}
+  supplies the next term.  Suppose
+  first that \((\rho_n)\) is unbounded.  Its strictly increasing correction
+  monomials are Hahn summable; write their sum as \(x\).  Fix
+  \(\gamma\in\Gamma\).  First go beyond every index in the finite set from
+  \namedref{Lemma}{lem:ordinal-eval-finite}, and then go still farther, if
+  necessary, to choose \(n\) with \(m\rho_n>\gamma\).  The coefficient in
+  \(F(x)\) at \(t^\gamma\) is then the same as that of this finite
+  approximation.  But
+  \[
+    \Val(F(x_n))=m\rho_n>\gamma,
+  \]
+  so that coefficient is zero.  Since \(\gamma\) was arbitrary,
+  \(F(x)=0\), contrary to the assumption.
+
+  Thus the correction values are bounded and the chain, together with the
+  fixed coefficient data that produces its corrections, is a terminal
+  obstruction.  By
+  \namedref{Lemma}{lem:terminal-prefix-resolution}, that obstruction itself
+  yields a solution in \(\mathfrak m\), a contradiction.
+\end{proof}
+
+\section{Odd roots and real closedness of the Hahn field}
+\label{sec:hahn-conclusion}
+
+\begin{lemma}[A slope dominated by the top-degree term]
+\label{lem:dominating-slope}
+  Assume that \(\Gamma\) is nontrivial.  Let
+  \(0\ne F(X)=\sum_i a_iX^i\in k((\Gamma))[X]\), put
+  \(n=\deg F\), and write \(\gamma_n=\Val(a_n)\).  There is
+  \(\delta\in\Gamma\) such that, for every \(i<n\) with \(a_i\ne0\),
+  \[
+    (n-i)\delta<\Val(a_i)-\gamma_n.
+    \tag{DS}\label{eq:dominating-slope}
+  \]
+\end{lemma}
+\begin{proof}
+  There are only finitely many indices \(i<n\) with \(a_i\ne0\).  For each
+  of them, divisibility of \(\Gamma\) gives a unique threshold \(q_i\) with
+  \[
+    (n-i)q_i=\Val(a_i)-\gamma_n.
+  \]
+  Uniqueness follows because an ordered abelian group is torsion-free.
+  Choose \(\varepsilon>0\), which exists because \(\Gamma\) is nontrivial.
+  If the set of thresholds is nonempty, take
+  \(\delta=\min_i q_i-\varepsilon\); if it is empty, take any \(\delta\).
+  Then \(\delta<q_i\) is exactly
+  \eqref{eq:dominating-slope}.
+\end{proof}
+
+\begin{theorem}[Odd-degree roots in the Hahn field]
+\label{thm:hahn-odd-roots}
+  Every polynomial in \(k((\Gamma))[X]\) of odd degree has a root in
+  \(k((\Gamma))\).
+\end{theorem}
+\begin{proof}
+  First prove by strong induction on odd \(m>0\) that every normalized problem
+  of multiplicity \(m\) has a root in \(\mathfrak m\).  The case \(m=1\) is
+  \namedref{Proposition}{prop:multiplicity-one-core}.  If \(m>1\), the
+  induction hypothesis solves every proper odd multiplicity below \(m\).
+  Translate at an arbitrary current approximation in \(\mathfrak m\).  If a
+  coefficient lies below the current Newton edge,
+  \namedref{Proposition}{prop:lower-edge} gives a root.  Otherwise the weight
+  inequalities in \eqref{eq:successor-nonbelow},
+  \namedref{Lemma}{lem:proper-odd-root}, and
+  \namedref{Lemma}{lem:successor-correction} give the next Newton correction.
+  Fixing the integral coefficient lift therefore gives the root-or-step
+  property required by
+  \namedref{Proposition}{prop:transfinite-termination}, which supplies a root.
+  This completes the induction.
+
+  Now let \(F\) have odd degree \(n\).  If \(\Gamma\) is trivial, every Hahn
+  series has support at the sole group element, so the Hahn field identifies
+  with the real closed coefficient field \(k\); the required root then exists
+  in \(k\).  Suppose \(\Gamma\) is nontrivial.  Since \(n\) is odd,
+  \(F\ne0\) and \(n>0\).  Write \(F=\sum_i a_iX^i\) and
+  \(\gamma_n=\Val(a_n)\).  Apply
+  \namedref{Lemma}{lem:dominating-slope} to obtain \(\delta\), put
+  \(\lambda=\gamma_n+n\delta\), and define
+  \(\widetilde F(X)=t^{-\lambda}F(t^\delta X)\).  Its degree-\(n\)
+  coefficient has value \(-\lambda+\gamma_n+n\delta=0\), while for
+  \(i<n\) with \(a_i\ne0\) the degree-\(i\) coefficient has value
+  \[
+    -\lambda+\Val(a_i)+i\delta
+      =\Val(a_i)-\gamma_n-(n-i)\delta>0.
+  \]
+  Coefficients above degree \(n\) vanish.  Thus \(\widetilde F\) is a
+  normalized problem of odd multiplicity \(n\).
+  The induction just proved gives \(z\in\mathfrak m\) with
+  \(\widetilde F(z)=0\).  Therefore
+  \[
+    F(t^\delta z)=t^\lambda\widetilde F(z)=0,
+  \]
+  so \(t^\delta z\) is a root of the original polynomial.
+\end{proof}
+
+\begin{proof}[Proof of \namedref{Theorem}{thm:hahn-real-closed}]
+  \namedref{Proposition}{prop:hahn-squares} gives square roots of all nonnegative
+  elements, and \namedref{Theorem}{thm:hahn-odd-roots} gives roots of all
+  odd-degree polynomials.  \namedref{Proposition}{prop:real-closed-criterion}
+  now applies.
+\end{proof}
+
+\section{Newton--Puiseux construction with bounded denominators}
+\label{sec:puiseux-process}
+
+For \(N\ge1\), put
+\[
+  \Gamma_N=\frac1N\mathbb Z,\qquad
+  \mathcal P_N(k)=
+  \{x\in k((\mathbb Q)):\Supp(x)\subseteq\Gamma_N\}.
+\]
+Then \(\Puiseux=\bigcup_{N\ge1}\mathcal P_N(k)\).  A finite collection of
+Puiseux series and polynomial coefficients is contained in one common
+\(\mathcal P_N(k)\).
+
+The argument is the classical Newton--Puiseux construction.  We record the
+extra denominator control needed for roots in the union of the rings
+\(\mathcal P_N(k)\);
+see \cite{Walker}.
+
+We call \(\mathcal P_N(k)\) the \emph{fixed denominator level \(N\)}.  For a
+polynomial over its valuation ring, the \emph{residue polynomial} is obtained
+by reducing every coefficient modulo the maximal ideal.  A residue root
+\(a\in k\) is \emph{simple} when the residue polynomial vanishes at \(a\) but
+its derivative does not.  In a Newton step of
+current multiplicity \(M\), the \emph{full-multiplicity case} is the case in
+which the chosen root of the initial polynomial has multiplicity exactly
+\(M\); a smaller multiplicity is proper.
+
+For a local ring with maximal ideal \(\mathfrak n\), its
+\emph{maximal-ideal topology} is the topology in which congruence modulo
+\(\mathfrak n^r\), for \(r=1,2,\ldots\), gives a neighborhood basis of
+zero.
+
+\begin{definition}[Power-series model of a fixed denominator level]
+\label{def:fixed-level-power-series}
+  For \(N\ge1\), put \(q=t^{1/N}\) and
+  \[
+    \mathcal O_N=\mathcal P_N(k)\cap\Ocal
+  \].
+  The \emph{power-series identification} of this level is the coefficient
+  re-indexing isomorphism
+  \[
+    \Phi_N:k[[q]]\xrightarrow{\ \sim\ }\mathcal O_N,
+    \qquad
+    \sum_{i\ge0}a_iq^i\longmapsto\sum_{i\ge0}a_it^{i/N}.
+  \]
+  Indeed, the image support is well ordered.  Conversely, every exponent in
+  an element of \(\mathcal O_N\) is nonnegative and belongs to
+  \(\frac1N\mathbb Z\), hence is uniquely \(i/N\) for some
+  \(i\in\mathbb N\).  Re-indexing by this unique \(i\) is the inverse map;
+  addition and convolution multiplication are preserved because
+  \((i+j)/N=i/N+j/N\).
+\end{definition}
+
+\begin{lemma}[Completeness of a fixed denominator level]
+\label{lem:fixed-level}
+  The ring \(\mathcal O_N\) is complete for its maximal-ideal topology.
+\end{lemma}
+\begin{proof}
+  Under the power-series identification from
+  \namedref{Definition}{def:fixed-level-power-series}, the maximal ideal of
+  \(\mathcal O_N\) corresponds to \((q)\).  Thus
+  congruence modulo \((q)^r\) means equality of the coefficients of
+  \(1,q,\ldots,q^{r-1}\).  A Cauchy sequence therefore has each coefficient
+  eventually constant.  Taking those eventual values produces a series in
+  \(k[[q]]\), and the sequence converges to it modulo every \((q)^r\).
+  Transporting this limit through \(\Phi_N\) proves the asserted completeness
+  of \(\mathcal O_N\).
+\end{proof}
+
+\begin{lemma}[Simple roots lift without changing the denominator]
+\label{lem:simple-lift}
+  Let \(F\in\mathcal O_N[X]\), and suppose that its residue polynomial has
+  a simple root \(a\in k\).  Then \(F\) has a root in \(\mathcal O_N\) reducing
+  to \(a\).
+\end{lemma}
+\begin{proof}
+  This is the simple-root form of Hensel's lemma for a complete local ring.
+  We include its Newton argument.
+  Start with a lift \(x_0\) of \(a\).  Then \(F(x_0)\in(q)\), while
+  \(F'(x_0)\notin(q)\), so \(F'(x_0)\) is a unit.  Define Newton's iteration
+  \[
+    x_{n+1}=x_n-\frac{F(x_n)}{F'(x_n)}
+  \]
+  and put \(e_n=F(x_n)\).  Taylor expansion in the polynomial ring gives
+  \[
+    F(x_n+h)=F(x_n)+F'(x_n)h+h^2R_n(h)
+  \]
+  for a polynomial \(R_n\) over \(\mathcal O_N\).  With
+  \(h=-e_n/F'(x_n)\), the first two terms cancel, hence
+  \[
+    v(e_{n+1})\ge 2v(e_n),\qquad
+    v(x_{n+1}-x_n)=v(e_n).
+  \]
+  Moreover \(x_{n+1}\equiv x_n\pmod{(q)}\), so
+  \(F'(x_{n+1})\equiv F'(x_n)\not\equiv0\pmod{(q)}\); every derivative used
+  above remains a unit.  Since \(v(e_0)\ge1/N\), induction yields
+  \(v(e_n)\ge2^n/N\), and therefore
+  \((x_n)\) is Cauchy for the \((q)\)-adic topology.  By
+  \namedref{Lemma}{lem:fixed-level} it converges to some \(x\in\mathcal O_N\).
+  The inequalities \(v(e_n)\to\infty\) and continuity of polynomial
+  evaluation give \(F(x)=0\), while \(x\equiv a\pmod{(q)}\).
+\end{proof}
+
+\begin{lemma}[Full multiplicity preserves the denominator lattice]
+\label{lem:full-multiplicity-denominator}
+  Let \(F\in\Ocal[X]\) and \(y\in\Ocal\), and suppose that the supports of
+  every coefficient of \(F\) and of \(y\) lie in \(\Gamma_N\).  Let
+  \(M>0\), \(\delta>0\), and \(\gamma=M\delta\).  Assume that the coefficient
+  of \(X^M\) in \(F(X+y)\) is a unit and that
+  \(\Init_{\delta,\gamma}(F(X+y))\) has a nonzero root
+  \(c\in k^\times\) of multiplicity exactly \(M\).  Then
+  \(\delta\in\Gamma_N\).
+\end{lemma}
+\begin{proof}
+  For \(i>M\), the translated coefficient is integral and hence its Newton
+  weight is at least \(i\delta>M\delta=\gamma\).  Thus the initial polynomial
+  has degree at most \(M\), while its degree-\(M\) coefficient is nonzero
+  because that translated coefficient is a unit.  Its degree is therefore
+  exactly \(M\).  A root of multiplicity \(M\) in a degree-\(M\) polynomial
+  forces the factorization
+  \[
+    I(T)=u(T-c)^M,\qquad u\ne0.
+  \]
+  Its coefficient of \(T^{M-1}\) is \(-uMc\ne0\).  Since the translated
+  degree-\(M\) coefficient is a unit, its exponent on the weight level
+  \(\gamma\) is \(0=\gamma-M\delta\).  The coefficient of \(T^{M-1}\)
+  comes from exponent
+  \(\gamma-(M-1)\delta\).  This exponent is therefore equal to
+  \(\delta\).  It belongs to the support of the degree-\((M-1)\)
+  coefficient of \(F(X+y)\).  Translation by \(y\) preserves
+  \(\Gamma_N\)-supported coefficients, because only finite sums and products
+  occur.  Hence this translated coefficient, and therefore \(\delta\), lies
+  in \(\Gamma_N\).
+\end{proof}
+
+\begin{lemma}[A strict chain in a rational lattice is unbounded]
+\label{lem:lattice-chain}
+  Let \(f:\mathbb N\to\mathbb Q\).  If \(f\) is strictly increasing and
+  \(f(n)\in\Gamma_N\) for every \(n\), then \(f\) is not bounded above.
+\end{lemma}
+\begin{proof}
+  More precisely,
+  \[
+    f(n+1)-f(n)\ge\frac1N,\qquad
+    f(n)\ge f(0)+\frac nN.
+  \]
+  The difference of two elements of \(\Gamma_N\) is again in \(\Gamma_N\),
+  and every positive element of \(\Gamma_N\) is at least \(1/N\).
+  Summing gives the second inequality.  If \(b\) were an upper bound, choose
+  \(n>N(b-f(0))\); then \(f(0)+n/N>b\), a contradiction.
+\end{proof}
+
+\begin{theorem}[Bounded-denominator odd roots]
+\label{thm:puiseux-odd-roots}
+  Every odd-degree polynomial over \(\Puiseux\) has a root in \(\Puiseux\).
+\end{theorem}
+\begin{proof}
+  Let \(P\) be the given polynomial.  Put all its coefficients in one
+  denominator level.  Write \(d=\deg P\) and let \(\gamma_d\) be the value of
+  its leading coefficient.  Apply \namedref{Lemma}{lem:dominating-slope} with
+  \(\Gamma=\mathbb Q\), choose \(\delta\), and put
+  \(\lambda=\gamma_d+d\delta\).  Enlarge the denominator once so that
+  \(\delta,\lambda\in\Gamma_N\).  The same coefficient calculation as in
+  the proof of \namedref{Theorem}{thm:hahn-odd-roots} shows that
+  \[
+    F(X)=t^{-\lambda}P(t^\delta X)
+  \]
+  is a normalized problem all of whose coefficients lie in
+  \(\mathcal P_N(k)\).  We solve \(F\) by strong induction on its odd
+  multiplicity.
+  A simple residue root is lifted by \namedref{Lemma}{lem:simple-lift}.  A proper
+  odd multiplicity \(r<M\) is normalized by one translation and one monomial
+  dilation.  Only finitely many new rational monomial exponents occur.
+  The scalar constants lie in \(k\) and have support at zero, while the
+  existing coefficients already have a common denominator.  Thus, after
+  replacing \(N\) by one common multiple of the old and new denominators,
+  all transformed coefficients lie in a single denominator level.  The induction hypothesis at \(r\) gives a root
+  at some bounded level, and undoing these two finite transformations still
+  has bounded denominator.  Thus denominator enlargement in every
+  multiplicity-decreasing branch is finite; an infinite branch can only be
+  the full-multiplicity branch treated next.
+
+  In the full-multiplicity case of current multiplicity \(M\),
+  \namedref{Lemma}{lem:full-multiplicity-denominator}
+  shows inductively that the translated polynomial and every successive
+  correction remain at the same fixed level \(\Gamma_N\).  If the corrections
+  terminate, the finite sum of corrections is a root in
+  \(\mathcal P_N(k)\).  Otherwise write the corrections as
+  \(c_nt^{\delta_n}\).  The values \(\delta_n\) are strictly increasing in
+  \(\Gamma_N\), hence are unbounded by \namedref{Lemma}{lem:lattice-chain}.
+
+  The family \((c_nt^{\delta_n})_n\) is Hahn summable and its sum \(x\)
+  still has support in \(\Gamma_N\).  Fix an exponent \(\gamma\).  First go
+  beyond every index in the finite set supplied by
+  \namedref{Lemma}{lem:ordinal-eval-finite}, and then increase \(n\), if
+  necessary, until \(\delta_n>\gamma\).  The coefficient of \(t^\gamma\) in
+  \(F(x)\) is then the coefficient at the \(n\)-th approximation.  At that stage the
+  successor construction gives \(\Val(F(x_n))=M\delta_n\).  Since \(M>0\)
+  and \(\delta_n>\gamma\), this valuation is greater than \(\gamma\), so the
+  coefficient of \(t^\gamma\) in \(F(x_n)\), and hence in \(F(x)\), is
+  zero.  Thus every coefficient of \(F(x)\) is zero and
+  \(F(x)=0\).  Consequently \(x\in\mathcal P_N(k)\), and
+  \(t^\delta x\in\Puiseux\) is a root of the original polynomial \(P\).
+\end{proof}
+
+\begin{proposition}[Nonnegative Puiseux series are squares]
+\label{prop:puiseux-squares}
+  Every nonnegative element of \(\Puiseux\) is a square in \(\Puiseux\).
+\end{proposition}
+\begin{proof}
+  The case \(x=0\) is immediate.  If \(0<x\in\mathcal P_N(k)\), the leading-term argument of
+  \namedref{Section}{sec:square-roots} halves the leading exponent and the
+  binomial series uses only sums of exponents in \(\Gamma_N\).  Thus the
+  constructed square root has support in
+  \(\Gamma_{2N}\), and hence belongs to \(\Puiseux\).
+\end{proof}
+
+\begin{proof}[Proof of \namedref{Theorem}{thm:puiseux-real-closed}]
+  Apply \namedref{Proposition}{prop:puiseux-squares},
+  \namedref{Theorem}{thm:puiseux-odd-roots}, and
+  \namedref{Proposition}{prop:real-closed-criterion}.
+\end{proof}
+
+\section{Corollaries with real coefficients}
+\label{sec:real}
+
+We use the classical fact that \(\mathbb R\) is real closed.  Equivalently,
+every nonnegative real number has a real square root and every odd-degree
+real polynomial has a real zero.
+
+\begin{corollary}[The real rational Hahn field]
+\label{cor:real-rational-hahn}
+  The ordered Hahn field \(\mathbb R((\mathbb Q))\) is real closed.
+\end{corollary}
+\begin{proof}
+  The ordered additive group \(\mathbb Q\) is divisible: for
+  \(q\in\mathbb Q\) and \(n>0\), the element \(q/n\) satisfies
+  \(n(q/n)=q\).  \namedref{Theorem}{thm:hahn-real-closed}, with
+  \(k=\mathbb R\) and \(\Gamma=\mathbb Q\), therefore applies.
+\end{proof}
+
+\begin{corollary}[Real Puiseux field]
+\label{cor:real-puiseux}
+  The field \(\mathcal P(\mathbb R)\) is real closed.
+\end{corollary}
+\begin{proof}
+  Apply \namedref{Theorem}{thm:puiseux-real-closed} with \(k=\mathbb R\).
+\end{proof}
+
+\appendix
+
+\section{Correspondence with the Lean formalization}
+\label{sec:lean}
+
+The main text is deliberately mathematical and uses no Lean terminology.
+This appendix records the correspondence needed to audit that its case splits,
+induction parameter, limit construction, and denominator control agree with
+the maintained formal proof.  Declaration and module names here are audit
+markers, not substitutes for arguments in the main text.  Each assertion in
+the left column links back to its complete statement and proof.
+\lean{HahnField.exists_leadingTerm_decomposition_of_pos},
+\lean{KSameMultiplicityOrdinalJetChain},
+\lean{iterateFixedLiftTerminalOrdinalPrefixState_invariant}, and
+\lean{not_bddAbove_range_of_strictMono_of_common_denominator} are private
+Lean declarations: they are source-level audit markers, not importable global
+declaration names.
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.52\textwidth}
+  >{\raggedright\arraybackslash}p{0.42\textwidth}@{}}
+\toprule
+\textbf{Mathematical assertion} & \textbf{Formal correspondence and role}\\
+\midrule
+\endhead
+\claimref{thm:hahn-real-closed}{Theorem}{real closedness of \(k((\Gamma))\)}
+  & \lean{hahnKaplansky_realClosed_of_realClosed_divisible}.\\
+\claimref{thm:puiseux-real-closed}{Theorem}{real closedness of \(\mathcal P(k)\)}
+  & \lean{puiseuxSeries_isRealClosed}.\\
+\claimref{prop:real-closed-criterion}{Proposition}{the ordered-field criterion for real closedness}
+  & \lean{IsRealClosed.of_linearOrderedField}.\\
+\claimref{lem:leading-term}{Lemma}{leading-term normalization of a positive Hahn series}
+  & \lean{HahnField.exists_leadingTerm_decomposition_of_pos}.\\
+\claimref{lem:positive-unit-square}{Lemma}{binomial square root of a \(1\)-unit}
+  & \lean{HahnField.exists_square_root_of_orderTop_sub_one_pos}.\\
+\claimref{prop:hahn-squares}{Proposition}{nonnegative Hahn series are squares}
+  & \lean{HahnField.isSquare_of_nonneg}.\\
+\claimref{lem:newton-correction}{Lemma}{normalization at an odd-multiplicity Newton root}
+  & \lean{HahnField.oddClusterHypotheses_scalePolynomial_comp_single_zero_of_rootMultiplicity}.\\
+\claimref{def:odd-newton-problem}{Definition}{normalized odd Newton problem}
+  & \lean{HahnField.KOddClusterHypotheses}.\\
+\claimref{lem:proper-odd-root}{Lemma}{a nonzero odd-multiplicity root of an odd-degree polynomial}
+  & \lean{exists_nonzero_root_odd_rootMultiplicity_le_natDegree}.\\
+\claimref{prop:lower-edge}{Proposition}{multiplicity descent along a lower Newton edge}
+  & \lean{HahnField.positiveHahnRoot_of_lowerNewtonEdge}.\\
+\claimref{def:ordinal-terminology}{Definition}{ordinal initial segments, successors, and limits}
+  & Standard mathlib concepts.\\
+\claimref{lem:successor-correction}{Lemma}{successor-stage correction}
+  & \lean{HahnField.exists_oddClusterStep_of_current_edge_initial_root}.\\
+\claimref{lem:successor-values-strict}{Lemma}{strict increase of successive correction values}
+  & \lean{HahnField.KOddClusterFixedStepChainFromData.stepValue_strictMono}.\\
+\claimref{lem:ordinal-hahn-sum}{Lemma}{Hahn sum of a separated well-ordered family}
+  & \lean{HahnField.HahnSeries.summableFamilyOfSeparatedSupports}.\\
+\claimref{lem:ordinal-eval-finite}{Lemma}{finite dependence of polynomial-evaluation coefficients}
+  & \lean{HahnField.OrdinalSupport.HahnSummableFamily.eval_coeff_eq_predTrunc_of_support}.\\
+\claimref{lem:one-block-successor}{Lemma}{a root or a multiplicity-\(1\) block successor}
+  & \lean{HahnField.rootInMaximalIdeal_or_exists_blockSuccessor_at_state}.\\
+\claimref{def:coherent-one-block}{Definition}{coherent multiplicity-\(1\) Newton block process}
+  & \lean{HahnField.OneClusterCoherentBlockChain}.\\
+\claimref{def:coherent-terminal-process}{Definition}{coherent higher-multiplicity terminal-state process}
+  & \lean{KSameMultiplicityOrdinalJetChain}.\\
+\claimref{prop:one-block-limit-prefix}{Proposition}{the multiplicity-\(1\) limit prefix}
+  & \lean{HahnField.PositiveIioCoherentChainAtBelow.limitStepOfNaturalComponents}.\\
+\claimref{prop:terminal-process-invariant}{Proposition}{invariant of the higher-multiplicity terminal process}
+  & \lean{iterateFixedLiftTerminalOrdinalPrefixState_invariant}.\\
+\claimref{def:hartogs}{Definition}{the Hartogs ordinal}
+  & \lean{hartogsOrdinal}.\\
+\claimref{lem:hartogs}{Lemma}{the Hartogs obstruction in \(\Gamma\)}
+  & \lean{not_exists_strictMono_cardinal_succ_ord_toType}.\\
+\claimref{lem:terminal-prefix-resolution}{Lemma}{resolution of a terminal obstruction}
+  & \lean{HahnField.KSameMultiplicityFixedStepTerminalObstructionData.positiveHahnRoot_of_edgeStep_rootOrStep_terminalResolution}.\\
+\claimref{prop:multiplicity-one-core}{Proposition}{solution of the multiplicity-\(1\) branch}
+  & \lean{kOddClusterRootAt_one_of_ordinalStackRec}.\\
+\claimref{prop:transfinite-termination}{Proposition}{termination of the higher-multiplicity branch}
+  & \lean{positiveHahnRoot_of_sameMultiplicityZeroBranch}.\\
+\claimref{lem:dominating-slope}{Lemma}{a slope dominated by the top-degree term}
+  & \lean{HahnField.exists_natDegree_dominating_slope}.\\
+\claimref{thm:hahn-odd-roots}{Theorem}{roots of odd-degree polynomials in \(k((\Gamma))\)}
+  & \lean{hahnKaplansky_exists_root_of_odd_natDegree}.\\
+\claimref{def:fixed-level-power-series}{Definition}{power-series identification of a fixed denominator level}
+  & \lean{Puiseux.powerSeriesFixedDenominatorValuationSubringEquiv}.\\
+\claimref{lem:fixed-level}{Lemma}{completeness of a fixed denominator level}
+  & \lean{Puiseux.fixedDenominatorValuationSubring_isAdicComplete}.\\
+\claimref{lem:simple-lift}{Lemma}{simple-root lifting at a fixed denominator}
+  & \lean{Puiseux.levelSimpleRootLiftHypothesis_of_isAdicComplete}.\\
+\claimref{lem:full-multiplicity-denominator}{Lemma}{denominator preservation at full multiplicity}
+  & \lean{Puiseux.hasDenominator_newtonStep_of_full_initial_rootMultiplicity}.\\
+\claimref{lem:lattice-chain}{Lemma}{unboundedness of a strict chain in \(\frac1N\mathbb Z\)}
+  & \lean{not_bddAbove_range_of_strictMono_of_common_denominator}.\\
+\claimref{thm:puiseux-odd-roots}{Theorem}{bounded-denominator roots of odd-degree polynomials}
+  & \lean{puiseuxSeries_exists_root_of_odd_natDegree}.\\
+\claimref{prop:puiseux-squares}{Proposition}{nonnegative Puiseux series are squares}
+  & \lean{puiseuxSeries_isSquare_of_nonneg}.\\
+\claimref{cor:real-rational-hahn}{Corollary}{real closedness of \(\mathbb R((\mathbb Q))\)}
+  & \lean{realRationalHahnField_isRealClosed}.\\
+\claimref{cor:real-puiseux}{Corollary}{real closedness of \(\mathcal P(\mathbb R)\)}
+  & \lean{realPuiseuxSeries_isRealClosed}.\\
+\bottomrule
+\end{longtable}
+
+\section{Reproducibility and references}
+\label{sec:reproducibility}
+
+The machine-checked developments can be rebuilt with:
+\begin{verbatim}
+lake build
+lake build HahnKaplanskyRealClosedness.Examples
+lake env lean HahnKaplanskyRealClosedness/AxiomAudit.lean
+lake env lean HahnKaplanskyRealClosedness/Smoke.lean
+lake env lean HahnKaplanskyRealClosedness/PuiseuxSmoke.lean
+task lint
+\end{verbatim}
+The public theorem audit uses only the standard foundational axioms:
+\[
+  \texttt{propext},\qquad
+  \texttt{Classical.choice},\qquad
+  \texttt{Quot.sound}.
+\]
+
+\begin{thebibliography}{9}
+\bibitem{Kaplansky}
+  I. Kaplansky, \emph{Maximal fields with valuations},
+  Duke Mathematical Journal 9 (1942), 303--321.
+\bibitem{EnglerPrestel}
+  A. J. Engler and A. Prestel, \emph{Valued Fields},
+  Springer Monographs in Mathematics, Springer, 2005.
+\bibitem{Walker}
+  R. J. Walker, \emph{Algebraic Curves},
+  Princeton Mathematical Series 13, Princeton University Press, 1950.
+\end{thebibliography}
+
+\end{document}
