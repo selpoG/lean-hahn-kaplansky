@@ -384,7 +384,7 @@ theorem OneClusterBlockChain.succExtendBlock_emb_next_val
         j).next.val k Γ) =
       (C.block (ordinalIioSuccPred (Order.succ o) j hj)).next.val k Γ := by
   dsimp [succExtendBlock]
-  rw [dif_neg hj]
+  rw [dite_eq_right hj]
   exact OneClusterBlockSuccessor.next_val_eq_of_eq k Γ _ _
 
 theorem OneClusterBlockChain.succExtendBlock_emb_next_val'
@@ -424,7 +424,7 @@ theorem OneClusterBlockChain.succExtendBlock_not_top_diffHahnSeries
     (C.succExtendBlock k Γ hsmall hunit hno j).diffHahnSeries k Γ =
       (C.block (ordinalIioSuccPred (Order.succ o) j hj)).diffHahnSeries k Γ := by
   dsimp [succExtendBlock]
-  rw [dif_neg hj]
+  rw [dite_eq_right hj]
   exact OneClusterBlockSuccessor.diffHahnSeries_eq_of_eq k Γ _ _
 
 theorem OneClusterBlockChain.succExtendBlock_emb_diffHahnSeries

@@ -6,6 +6,10 @@ Authors: selpo
 
 import HahnKaplanskyRealClosedness
 
+/-!
+# Smoke tests for the Hahn and real-number instances
+-/
+
 namespace HahnKaplanskyRealClosedness
 
 variable (k Γ : Type*)

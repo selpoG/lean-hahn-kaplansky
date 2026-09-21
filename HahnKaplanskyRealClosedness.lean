@@ -8,6 +8,10 @@ import HahnKaplanskyRealClosedness.Puiseux
 import HahnKaplanskyRealClosedness.RealClosedReal
 import HahnKaplanskyRealClosedness.Main
 
+/-!
+# Public Hahn and Puiseux real-closedness theorems
+-/
+
 namespace HahnKaplanskyRealClosedness
 
 /-- The Puiseux series field over the real numbers is real closed. -/

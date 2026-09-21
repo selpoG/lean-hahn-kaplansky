@@ -29,7 +29,7 @@ theorem hasBoundedDenominatorSupportPolynomial_C {x : HahnField k ℚ}
   · subst i
     rw [Polynomial.coeff_C_zero]
     exact hx
-  · rw [Polynomial.coeff_C, if_neg hi]
+  · rw [Polynomial.coeff_C, ite_eq_right hi]
     exact hasBoundedDenominatorSupport_zero k
 
 theorem hasBoundedDenominatorSupportPolynomial_X :
@@ -39,7 +39,7 @@ theorem hasBoundedDenominatorSupportPolynomial_X :
   · subst i
     rw [Polynomial.coeff_X_one]
     exact hasBoundedDenominatorSupport_one k
-  · rw [Polynomial.coeff_X, if_neg (fun h => hi h.symm)]
+  · rw [Polynomial.coeff_X, ite_eq_right (fun h => hi h.symm)]
     exact hasBoundedDenominatorSupport_zero k
 
 theorem hasBoundedDenominatorSupportPolynomial_add {F G : Polynomial (HahnField k ℚ)}

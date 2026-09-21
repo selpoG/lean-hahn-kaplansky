@@ -33,7 +33,7 @@ theorem isWF_range_of_strictMono
     {f : I → α} (hf : StrictMono f) : (Set.range f).IsWF := by
   rw [Set.IsWF, Set.wellFoundedOn_range]
   exact Subrelation.wf (fun {i j} h => hf.lt_iff_lt.mp h)
-    (inferInstance : WellFoundedLT I).wf
+    (inferInstance : WellFoundedLT I)
 
 /-- The range of a strictly increasing sequence indexed by `ℕ` is partially well-ordered in a
 linear order. -/
@@ -601,7 +601,7 @@ theorem nextApprox_root_or_step_of_one_cluster
     exact hroot
   · right
     dsimp [nextApproxOfOneCluster]
-    rw [dif_pos hy, dif_neg hroot]
+    rw [dite_eq_left hy, dite_eq_right hroot]
     exact Classical.choose_spec
       (exists_simpleClusterStep_of_one_cluster k Γ hsmall hunit hy
         (by simpa [Polynomial.IsRoot] using hroot))
@@ -617,7 +617,7 @@ theorem nextApprox_mem_maximalIdeal_of_one_cluster
   classical
   rcases nextApprox_root_or_step_of_one_cluster k Γ hsmall hunit hy with hroot | hstep
   · dsimp [nextApproxOfOneCluster]
-    rw [dif_pos hy, dif_pos hroot]
+    rw [dite_eq_left hy, dite_eq_left hroot]
     exact hy
   · exact hstep.mem_maximalIdeal
 
@@ -670,8 +670,8 @@ theorem simpleClusterApprox_succ_eq_of_root
       simpleClusterApproxOfOneCluster k Γ hsmall hunit n := by
   classical
   dsimp [simpleClusterApproxOfOneCluster, nextApproxOfOneCluster]
-  rw [dif_pos (simpleClusterApprox_mem_maximalIdeal_of_one_cluster k Γ hsmall hunit n),
-    dif_pos hroot]
+  rw [dite_eq_left (simpleClusterApprox_mem_maximalIdeal_of_one_cluster k Γ hsmall hunit n),
+    dite_eq_left hroot]
 
 theorem simpleClusterApprox_add_eq_of_root
     [IsRealClosed k] [DivisibleBy Γ ℕ]

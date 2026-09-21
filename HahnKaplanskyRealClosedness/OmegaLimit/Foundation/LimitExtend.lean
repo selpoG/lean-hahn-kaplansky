@@ -100,7 +100,7 @@ theorem OneClusterCoherentBlockChain.limitExtendState_emb
   have hne :
       ordinalIioSuccEmb o i ≠ (ordinalIioSuccOrderTop o).top :=
     ordinalIioSuccEmb_ne_top o i
-  rw [dif_neg hne]
+  rw [dite_eq_right hne]
   rw [ordinalIioSuccPred_emb]
 
 noncomputable def OneClusterCoherentBlockChain.limitExtendBlock
@@ -146,7 +146,7 @@ theorem OneClusterCoherentBlockChain.limitExtendBlock_emb_next_val
     ((C.limitExtendBlock k Γ ho hsmall hunit hno j).next.val k Γ) =
       (C.block (ordinalIioSuccPred o j hj)).next.val k Γ := by
   dsimp [limitExtendBlock]
-  rw [dif_neg hj]
+  rw [dite_eq_right hj]
   exact OneClusterBlockChain.OneClusterBlockSuccessor.next_val_eq_of_eq k Γ _ _
 
 theorem OneClusterCoherentBlockChain.limitExtendBlock_emb_next_val'
@@ -188,7 +188,7 @@ theorem OneClusterCoherentBlockChain.limitExtendBlock_emb_diffHahnSeries
       (C.block i).diffHahnSeries k Γ := by
   classical
   dsimp [limitExtendBlock]
-  rw [dif_neg (ordinalIioSuccEmb_ne_top o i)]
+  rw [dite_eq_right (ordinalIioSuccEmb_ne_top o i)]
   rw [OneClusterBlockChain.OneClusterBlockSuccessor.diffHahnSeries_eq_of_eq]
   have hpred :
       ordinalIioSuccPred o (ordinalIioSuccEmb o i) (ordinalIioSuccEmb_ne_top o i) = i := by

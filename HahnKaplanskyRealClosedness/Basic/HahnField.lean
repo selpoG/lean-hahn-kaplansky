@@ -465,7 +465,7 @@ theorem exists_natDegree_dominating_slope [Nontrivial Γ] [DivisibleBy Γ ℕ]
               (coeffValueOfMemSupport k Γ F (Finset.mem_of_mem_erase hi) - γn)
               (F.natDegree - i) := by
         dsimp [threshold]
-        exact dif_pos hi
+        exact dite_eq_left hi
       simpa [hthreshold] using hδi
     exact nsmul_lt_of_lt_div (Γ := Γ)
       (natDegree_sub_ne_zero_of_mem_support_erase_natDegree hi) hδdiv

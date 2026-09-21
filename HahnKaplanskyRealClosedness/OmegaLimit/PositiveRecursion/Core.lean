@@ -37,7 +37,7 @@ theorem PositiveIioCoherentChain.succOfNoRoot_apply_limit
   have hnot : ¬ o ∈ Set.range Order.succ := by
     rintro ⟨p, hp⟩
     exact hlim.succ_ne p hp
-  rw [dif_neg hnot]
+  rw [dite_eq_right hnot]
 
 @[simp]
 theorem PositiveIioCoherentChain.succOfNoRoot_apply_limit_state_bot_source
@@ -76,7 +76,7 @@ theorem PositiveIioCoherentChain.succOfNoRoot_apply_succ_state_bot_source
   classical
   unfold PositiveIioCoherentChain.succOfNoRoot
   have hsucc : Order.succ p ∈ Set.range Order.succ := ⟨p, rfl⟩
-  rw [dif_pos hsucc]
+  rw [dite_eq_left hsucc]
   simp [OneClusterCoherentBlockChain.succExtend_state_bot_source,
     PositiveIioCoherentChain.cast_state_bot_source']
 
@@ -155,7 +155,7 @@ theorem PositiveIioCoherentChain.succOfNoRoot_restrictEmb_diffHahnSeriesLimit_of
   classical
   unfold PositiveIioCoherentChain.succOfNoRoot
   have hsucc : Order.succ p ∈ Set.range Order.succ := ⟨p, rfl⟩
-  rw [dif_pos hsucc]
+  rw [dite_eq_left hsucc]
   dsimp only
   generalize_proofs h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 h12 h13 h14 h15 h16
   exact PositiveIioCoherentChain.mpr_mp_succExtend_mpr_mp_restrictEmb_diffHahnSeriesLimit
@@ -208,7 +208,7 @@ theorem PositiveIioCoherentChain.succOfNoRoot_block_emb_top_next_val_of_succ
   classical
   unfold PositiveIioCoherentChain.succOfNoRoot
   have hsucc : Order.succ p ∈ Set.range Order.succ := ⟨p, rfl⟩
-  rw [dif_pos hsucc]
+  rw [dite_eq_left hsucc]
   dsimp only
   generalize_proofs h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 h12 h13 h14 h15 h16
   exact PositiveIioCoherentChain.mpr_mp_succExtend_mpr_mp_block_emb_top_next_val
@@ -240,7 +240,7 @@ theorem PositiveIioCoherentChain.succOfNoRoot_block_emb_bot_next_val_of_succ
   classical
   unfold PositiveIioCoherentChain.succOfNoRoot
   have hsucc : Order.succ p ∈ Set.range Order.succ := ⟨p, rfl⟩
-  rw [dif_pos hsucc]
+  rw [dite_eq_left hsucc]
   dsimp only
   generalize_proofs h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 h12 h13 h14 h15 h16
   exact PositiveIioCoherentChain.mpr_mp_succExtend_mpr_mp_block_emb_next_val
@@ -273,7 +273,7 @@ theorem PositiveIioCoherentChain.succOfNoRoot_block_emb_next_val_of_succ
   classical
   unfold PositiveIioCoherentChain.succOfNoRoot
   have hsucc : Order.succ p ∈ Set.range Order.succ := ⟨p, rfl⟩
-  rw [dif_pos hsucc]
+  rw [dite_eq_left hsucc]
   dsimp only
   generalize_proofs h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 h12 h13 h14 h15 h16
   exact PositiveIioCoherentChain.mpr_mp_succExtend_mpr_mp_block_emb_next_val
@@ -306,7 +306,7 @@ theorem PositiveIioCoherentChain.succOfNoRoot_block_emb_diffHahnSeries_of_succ
   classical
   unfold PositiveIioCoherentChain.succOfNoRoot
   have hsucc : Order.succ p ∈ Set.range Order.succ := ⟨p, rfl⟩
-  rw [dif_pos hsucc]
+  rw [dite_eq_left hsucc]
   dsimp only
   generalize_proofs h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 h12 h13 h14 h15 h16
   exact PositiveIioCoherentChain.mpr_mp_succExtend_mpr_mp_block_emb_diffHahnSeries
