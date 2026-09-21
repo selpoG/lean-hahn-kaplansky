@@ -319,7 +319,7 @@ noncomputable def KOneClusterPositiveFinalExternalNaturalSegment.succ
     exact not_lt_of_ge hp (by rw [h]; exact Order.lt_succ o)
   rw [KOneClusterPositiveFinalExternalNaturalSegment.succ]
   simp only
-  rw [dif_pos hp]
+  rw [dite_eq_left hp]
 
 /-- A coherent system of final external natural-limit initial segments below `o`.
 

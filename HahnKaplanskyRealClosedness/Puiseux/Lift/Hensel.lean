@@ -109,7 +109,7 @@ theorem levelConstantCoeffHenselLiftHypothesis_of_henselianLocalRing
   intro n f hf a₀ hroot hder
   have : HenselianLocalRing (fixedDenominatorValuationSubring k n) := h n
   have hlift :=
-    ((HenselianLocalRing.TFAE (fixedDenominatorValuationSubring k n)).out 0 2).mp
+    ((HenselianLocalRing.TFAE (fixedDenominatorValuationSubring k n)).out 1 3).mp
       (show HenselianLocalRing (fixedDenominatorValuationSubring k n) from inferInstance)
   exact hlift (K := k) (fixedDenominatorConstantCoeffRingHom k n)
     (fixedDenominatorConstantCoeffRingHom_surjective k n) f hf a₀ hroot hder

@@ -443,7 +443,7 @@ theorem succExtendState_emb
       ordinalIioSuccEmb (Order.succ o) i ≠
         (ordinalIioSuccOrderTop (Order.succ o)).top :=
     ordinalIioSuccEmb_ne_top (Order.succ o) i
-  rw [dif_neg hne]
+  rw [dite_eq_right hne]
   rw [ordinalIioSuccPred_emb]
 
 theorem succExtendState_not_top
@@ -455,7 +455,7 @@ theorem succExtendState_not_top
     C.succExtendState k Γ j =
       C.state (ordinalIioSuccPred (Order.succ o) j hj) := by
   dsimp [succExtendState]
-  rw [dif_neg hj]
+  rw [dite_eq_right hj]
 
 def diffSummableFamily
     {ι : Type*} [LinearOrder ι] [WellFoundedLT ι]

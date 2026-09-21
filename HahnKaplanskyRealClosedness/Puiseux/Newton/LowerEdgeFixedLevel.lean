@@ -7,6 +7,7 @@ Authors: selpo
 import HahnKaplanskyRealClosedness.Puiseux.Newton.LowerEdge
 import HahnKaplanskyRealClosedness.Puiseux.Lift.ClusterRoutes
 import HahnKaplanskyRealClosedness.Puiseux.Newton.FixedStepSupport
+import Mathlib.Algebra.Order.Archimedean.Basic
 
 /-!
 # Fixed-level consumers of bounded affine Newton edges

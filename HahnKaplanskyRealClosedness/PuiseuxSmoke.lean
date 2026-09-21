@@ -6,6 +6,10 @@ Authors: selpo
 
 import HahnKaplanskyRealClosedness
 
+/-!
+# Smoke tests for Puiseux real closedness
+-/
+
 namespace HahnKaplanskyRealClosedness
 
 variable (k : Type*)

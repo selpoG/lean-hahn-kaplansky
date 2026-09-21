@@ -94,10 +94,10 @@ theorem hasDenominatorSupportPolynomial_comp_X_add_C_of_common_denominator
   intro p _hp
   rw [Polynomial.coeff_C]
   by_cases hp0 : p.1 = 0
-  · rw [if_pos hp0]
+  · rw [ite_eq_left hp0]
     exact hasDenominatorSupport_mul k (hF j)
       (hasDenominatorSupportPolynomial_pow_of_common_denominator k hXaddC j p.2)
-  · rw [if_neg hp0]
+  · rw [ite_eq_right hp0]
     simpa using hasDenominatorSupport_zero k n
 
 private theorem coeff_pred_ne_zero_of_rootMultiplicity_eq_natDegree

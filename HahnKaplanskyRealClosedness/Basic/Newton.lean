@@ -565,13 +565,13 @@ theorem coeff_eval_map_singleOfNonneg_eq_newtonInitialPolynomial_eval_of_weight_
           if hi : i ∈ S then newtonInitialCoeff k Γ G δ μ i * c ^ i else 0 := by
     intro i hiR
     by_cases hiS : i ∈ S
-    · rw [dif_pos hiS, newtonInitialCoeff_of_mem k Γ G δ μ hiS]
+    · rw [dite_eq_left hiS, newtonInitialCoeff_of_mem k Γ G δ μ hiS]
       have hcoeffi : G.coeff i = (F.coeff i : HahnField k Γ) := by
         dsimp [G]
         rw [Polynomial.coeff_map]
         exact Algebra.algebraMap_ofSubsemiring_apply (valuationSubring k Γ) (F.coeff i)
       simp [hcoeffi]
-    · rw [dif_neg hiS]
+    · rw [dite_eq_right hiS]
       have hzero :
           (ofLex (F.coeff i : HahnField k Γ)).coeff (μ - i • δ) = 0 :=
         coeff_substitution_summand_eq_zero_of_notMem_initialSupport_of_weight_ge

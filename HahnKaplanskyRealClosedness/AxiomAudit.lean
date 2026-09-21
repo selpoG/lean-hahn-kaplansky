@@ -6,6 +6,10 @@ Authors: selpo
 
 import HahnKaplanskyRealClosedness
 
+/-!
+# Axiom audits for the public real-closedness theorems
+-/
+
 /-
 # Public theorem audit
 

@@ -193,7 +193,7 @@ private theorem KSameMultiplicityOrdinalJetChain.mem_support_stableCoeff_imp_cut
     ∃ i : I, γ < C.rank k Γ i := by
   by_contra hnot
   apply hγ
-  rw [KSameMultiplicityOrdinalJetChain.stableCoeff, dif_neg hnot]
+  rw [KSameMultiplicityOrdinalJetChain.stableCoeff, dite_eq_right hnot]
 
 private noncomputable def KSameMultiplicityOrdinalJetChain.stableHahnSeries
     [IsRealClosed k] [DivisibleBy Γ ℕ]
@@ -724,7 +724,7 @@ private theorem terminalOrdinalNextState_eq_lowerEdgeRecoveryState
       S.lowerEdgeRecoveryState k Γ hfixed hbelow hno
         (S.chosenRankCoherentLowerEdge k Γ hedge).obstruction := by
   unfold terminalOrdinalNextState
-  simp only [dif_pos hedge]
+  simp only [dite_eq_left hedge]
 
 private theorem terminalOrdinalNextState_eq_advanceFirstSource
     [IsRealClosed k] [DivisibleBy Γ ℕ]
@@ -737,7 +737,7 @@ private theorem terminalOrdinalNextState_eq_advanceFirstSource
     S.terminalOrdinalNextState k Γ hfixed hbelow hno =
       S.advanceFirstSource k Γ := by
   unfold terminalOrdinalNextState
-  simp only [dif_neg hedge]
+  simp only [dite_eq_right hedge]
 
 private theorem terminalOrdinalNextState_shift_sub_eq_singleOfNonneg
     [IsRealClosed k] [DivisibleBy Γ ℕ]
@@ -1211,7 +1211,7 @@ private theorem terminalOrdinalStableLimitShift_of_prefix_hsum
             k Γ S hstrict i)).hsum.coeff γ := hprefix_i
       _ = A.hsum.coeff γ := hrestrict.symm
   · have hstable : C.stableCoeff k Γ γ = 0 := by
-      rw [KSameMultiplicityOrdinalJetChain.stableCoeff, dif_neg hcut]
+      rw [KSameMultiplicityOrdinalJetChain.stableCoeff, dite_eq_right hcut]
     have hzero : A.hsum.coeff γ = 0 := by
       rw [HahnSeries.SummableFamily.coeff_hsum]
       rw [finsum_eq_zero_of_forall_eq_zero]
@@ -1348,7 +1348,7 @@ private theorem terminalOrdinalPrefixIncrementOptionFamily_predTrunc_hsum
           rw [hli]
           have hpi : p i := by simpa [p] using hi
           have hsome : (some i : Option (Set.Iio o)).elim True p := hpi
-          rw [if_pos hsome, one_smul]
+          rw [ite_eq_left hsome, one_smul]
           exact hAi
         · have hnot : some i ∉ Set.range emb := by
             rintro ⟨l, hl⟩

@@ -194,7 +194,7 @@ private theorem lowerEdge_exists_affine_newton_edge
         simpa using nsmul_le_nsmul_right hle (n - i)
       rw [DivisibleBy.div_cancel _ hi_ne] at hmul_le
       exact (not_le_of_gt hvalpos) hmul_le
-    simpa [ratio, dif_pos hi] using hdivpos
+    simpa [ratio, dite_eq_left hi] using hdivpos
   rcases Finset.exists_min_image S ratio hS with ⟨j₀, hj₀, hmin⟩
   let θ : Γ := ratio j₀
   have hθpos : 0 < θ := hratio_pos j₀ hj₀
@@ -204,7 +204,7 @@ private theorem lowerEdge_exists_affine_newton_edge
     have hminj : ratio j₀ ≤ ratio j := hmin j hjS
     have hratioj : ratio j = DivisibleBy.div
         (coeffValueOfMemSupport k Γ G (Finset.mem_filter.mp hjS).1) (n - j) := by
-      simp [ratio, dif_pos hjS]
+      simp [ratio, dite_eq_left hjS]
     have hval_lt :
         coeffValueOfMemSupport k Γ G (Finset.mem_filter.mp hjS).1 < (n - j) • δ := by
       have hsplit : n • δ = (n - j) • δ + j • δ := by
@@ -249,7 +249,7 @@ private theorem lowerEdge_exists_affine_newton_edge
           have hi_ne : n - i ≠ 0 := Nat.ne_of_gt (Nat.sub_pos_of_lt hi_lt)
           have hratioi : ratio i = DivisibleBy.div
               (coeffValueOfMemSupport k Γ G (Finset.mem_filter.mp hiS).1) (n - i) := by
-            simp [ratio, dif_pos hiS]
+            simp [ratio, dite_eq_left hiS]
           have hmul : (n - i) • θ ≤
               coeffValueOfMemSupport k Γ G (Finset.mem_filter.mp hiS).1 := by
             calc
@@ -288,7 +288,7 @@ private theorem lowerEdge_exists_affine_newton_edge
     Nat.ne_of_gt (Nat.sub_pos_of_lt (Finset.mem_filter.mp hj₀).2)
   have hratio₀ : ratio j₀ = DivisibleBy.div
       (coeffValueOfMemSupport k Γ G (Finset.mem_filter.mp hj₀).1) (n - j₀) := by
-    simp [ratio, dif_pos hj₀]
+    simp [ratio, dite_eq_left hj₀]
   have hmul₀eq :
       (n - j₀) • θ =
         coeffValueOfMemSupport k Γ G (Finset.mem_filter.mp hj₀).1 := by

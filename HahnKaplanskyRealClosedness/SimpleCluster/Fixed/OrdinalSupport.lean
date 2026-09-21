@@ -205,7 +205,7 @@ theorem HahnSummableFamily.mul_pow_coeff_eq_predTrunc_of_support
   simp only [HahnSeries.SummableFamily.mul_toFun]
   rw [HahnSummablePowerFamily_predTrunc_apply (k := k) (Γ := Γ)]
   by_cases hi : ∀ a ∈ i.components, p a
-  · rw [if_pos hi]
+  · rw [ite_eq_left hi]
   · have hbad : ∃ a ∈ i.components, ¬p a := by
       push Not at hi
       exact hi
