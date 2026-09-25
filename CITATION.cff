@@ -1,10 +1,11 @@
 cff-version: 1.2.0
+type: software
 message: "If you use this formalization, please cite it as below."
 title: "lean-hahn-kaplansky: Hahn and Puiseux real closedness in Lean"
 authors:
-  - name: "selpo"
-version: 0.1.0
-date-released: 2026-09-06
+  - given-names: "Mocho"
+    family-names: "Go"
+version: 0.1.1
 repository-code: "https://github.com/selpoG/lean-hahn-kaplansky"
 license: "Apache-2.0"
 keywords:
@@ -13,3 +14,7 @@ keywords:
   - Hahn series
   - Puiseux series
   - real closed fields
+abstract: >-
+  A Lean 4 formalization of real closedness for the full Hahn field over a real
+  closed ordered field with a divisible ordered additive commutative value group,
+  and for the bounded-denominator Puiseux series field.
