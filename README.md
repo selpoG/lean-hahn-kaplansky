@@ -129,6 +129,7 @@ mathematical write-up, and citation metadata:
 ## License and citation
 
 Author: **Mocho Go** ([selpoG](https://github.com/selpoG)).
+[ORCID: 0009-0000-8123-9408](https://orcid.org/0009-0000-8123-9408).
 
 Please cite the software using [CITATION.cff](CITATION.cff), and identify the
 release or commit you used so that the cited formalization is reproducible.

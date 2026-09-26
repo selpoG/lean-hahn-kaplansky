@@ -5,6 +5,7 @@ title: "lean-hahn-kaplansky: Hahn and Puiseux real closedness in Lean"
 authors:
   - given-names: "Mocho"
     family-names: "Go"
+    orcid: "https://orcid.org/0009-0000-8123-9408"
 version: 0.1.1
 repository-code: "https://github.com/selpoG/lean-hahn-kaplansky"
 license: "Apache-2.0"
