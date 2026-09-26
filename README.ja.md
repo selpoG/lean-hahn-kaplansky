@@ -2,6 +2,8 @@
 
 [English version](README.md)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22974299.svg)](https://doi.org/10.5281/zenodo.22974299)
+
 この文書は、日本語で読むための公開入口である。標準の公開説明と定理名は
 [英語版 README](README.md) を主とする。
 
@@ -109,5 +111,9 @@ build せず、保存時だけ同じ directory へ出力する。同一 source �
 
 ソフトウェアとしての引用情報は [CITATION.cff](CITATION.cff) に記載しています。
 引用した形式化を再現できるよう、使用したリリースまたは commit を明記してください。
+
+保存済みの **v0.1.1** は
+[10.5281/zenodo.22974300](https://doi.org/10.5281/zenodo.22974300) から参照できます。
+冒頭の DOI バッジは、このソフトウェアの全バージョンをまとめたレコードを指します。
 
 [Apache License 2.0](LICENSE) の下で公開しています。
